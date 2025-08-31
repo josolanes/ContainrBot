@@ -1,0 +1,40 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Docker: Bot",
+            "type": "docker",
+            "request": "launch",
+            "preLaunchTask": "docker-run: debug bot",
+            "netCore": {
+                "appProject": "${workspaceFolder}/GameChatBot/GameChatBot.csproj"
+            },
+            "env": {
+                "ASPNETCORE_HTTP_PORTS": "8080",
+                "ASPNETCORE_ENVIRONMENT": "Development",
+                "BOT_TOKEN": "MTQxMTE3NTc4OTE4MDc0Nzg1OA.GsKPLR.qn47ynah5IKAgyWGZ3980v9HjzZ-Nig_0kJF-o"
+            },
+            "serverReadyAction": {
+                "action": "none"
+            }
+        },
+        {
+            "name": "Docker: Api",
+            "type": "docker",
+            "request": "launch",
+            "preLaunchTask": "docker-run: debug api",
+            "netCore": {
+                "appProject": "${workspaceFolder}/GameServerApi/GameServerApi.csproj"
+            },
+            "env": {
+                "ASPNETCORE_HTTP_PORTS": "8080",
+                "ASPNETCORE_ENVIRONMENT": "Development",
+                "GAME_SERVER_LIST": "[{\"FriendlyName\": \"valheim\", \"ContainerName\": \"valheim-valheim-crossplay-1\"}, {\"FriendlyName\": \"cncnet\", \"ContainerName\": \"cncnet-server\"}, {\"FriendlyName\": \"satisfactory\", \"ContainerName\": \"satisfactory-server\"}]"
+            },
+            "serverReadyAction": {
+                "action": "openExternally",
+                "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
+            }
+        }
+    ]
+}

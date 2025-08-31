@@ -1,0 +1,96 @@
+{
+  "format": 1,
+  "restore": {
+    "/home/josh/Projects/GameChatBot/GameChatBot/GameChatBot.csproj": {}
+  },
+  "projects": {
+    "/home/josh/Projects/GameChatBot/GameChatBot/GameChatBot.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/home/josh/Projects/GameChatBot/GameChatBot/GameChatBot.csproj",
+        "projectName": "GameChatBot",
+        "projectPath": "/home/josh/Projects/GameChatBot/GameChatBot/GameChatBot.csproj",
+        "packagesPath": "/home/josh/.nuget/packages/",
+        "outputPath": "/home/josh/Projects/GameChatBot/GameChatBot/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/home/josh/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net9.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net9.0": {
+            "targetAlias": "net9.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.100"
+      },
+      "frameworks": {
+        "net9.0": {
+          "targetAlias": "net9.0",
+          "dependencies": {
+            "Microsoft.AspNetCore.OpenApi": {
+              "target": "Package",
+              "version": "[9.0.7, )"
+            },
+            "NetCord": {
+              "target": "Package",
+              "version": "[1.0.0-alpha.418, )"
+            },
+            "NetCord.Hosting": {
+              "target": "Package",
+              "version": "[1.0.0-alpha.418, )"
+            },
+            "NetCord.Hosting.AspNetCore": {
+              "target": "Package",
+              "version": "[1.0.0-alpha.418, )"
+            },
+            "NetCord.Hosting.Services": {
+              "target": "Package",
+              "version": "[1.0.0-alpha.418, )"
+            },
+            "NetCord.Services": {
+              "target": "Package",
+              "version": "[1.0.0-alpha.418, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.AspNetCore.App": {
+              "privateAssets": "none"
+            },
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/opt/dotnet-sdk-bin-9.0/sdk/9.0.108/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

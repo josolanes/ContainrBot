@@ -1,0 +1,139 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "docker-build",
+			"label": "docker-build: debug bot",
+			"dockerBuild": {
+				"tag": "gamechatbot:dev",
+				"target": "base",
+				"dockerfile": "${workspaceFolder}/GameChatBot/Dockerfile",
+				"context": "${workspaceFolder}",
+				"pull": true
+			},
+			"netCore": {
+				"appProject": "${workspaceFolder}/GameChatBot/GameChatBot.csproj"
+			}
+		},
+		{
+			"type": "docker-build",
+			"label": "docker-build: release bot",
+			"dockerBuild": {
+				"tag": "gamechatbot:latest",
+				"dockerfile": "${workspaceFolder}/GameChatBot/Dockerfile",
+				"context": "${workspaceFolder}",
+				"platform": {
+					"os": "linux",
+					"architecture": "amd64"
+				},
+				"pull": true
+			},
+			"netCore": {
+				"appProject": "${workspaceFolder}/GameChatBot/GameChatBot.csproj"
+			}
+		},
+		{
+			"type": "docker-run",
+			"label": "docker-run: debug bot",
+			"dependsOn": [
+				"docker-build: debug bot"
+			],
+			"dockerRun": {
+				"env": {
+					"ASPNETCORE_HTTP_PORTS": "8080",
+					"ASPNETCORE_ENVIRONMENT": "Development",
+					"BOT_TOKEN": "MTQxMTE3NTc4OTE4MDc0Nzg1OA.GsKPLR.qn47ynah5IKAgyWGZ3980v9HjzZ-Nig_0kJF-o"
+				}
+			},
+			"netCore": {
+				"appProject": "${workspaceFolder}/GameChatBot/GameChatBot.csproj",
+				"enableDebugging": true,
+				"configureSsl": false
+			}
+		},
+		{
+			"type": "docker-run",
+			"label": "docker-run: release bot",
+			"dependsOn": [
+				"docker-build: release bot"
+			],
+			"dockerRun": {},
+			"netCore": {
+				"appProject": "${workspaceFolder}/GameChatBot/GameChatBot.csproj"
+			}
+		},
+		{
+			"type": "docker-build",
+			"label": "docker-build: debug api",
+			"dockerBuild": {
+				"tag": "gameserverapi:dev",
+				"target": "base",
+				"dockerfile": "${workspaceFolder}/GameServerApi/Dockerfile",
+				"context": "${workspaceFolder}",
+				"pull": true
+			},
+			"netCore": {
+				"appProject": "${workspaceFolder}/GameServerApi/GameServerApi.csproj"
+			}
+		},
+		{
+			"type": "docker-build",
+			"label": "docker-build: release api",
+			"dockerBuild": {
+				"tag": "gameserverapi:latest",
+				"dockerfile": "${workspaceFolder}/GameServerApi/Dockerfile",
+				"context": "${workspaceFolder}",
+				"platform": {
+					"os": "linux",
+					"architecture": "amd64"
+				},
+				"pull": true
+			},
+			"netCore": {
+				"appProject": "${workspaceFolder}/GameServerApi/GameServerApi.csproj"
+			}
+		},
+		{
+			"type": "docker-run",
+			"label": "docker-run: debug api",
+			"dependsOn": [
+				"docker-build: debug api"
+			],
+			"dockerRun": {
+				"ports": [
+					{
+						"containerPort": 8080,
+						"hostPort": 8080
+					}
+				],
+				"env": {
+					"ASPNETCORE_HTTP_PORTS": "8080",
+					"ASPNETCORE_ENVIRONMENT": "Development",
+					"GAME_SERVER_LIST": "[{\"FriendlyName\": \"valheim\", \"ContainerName\": \"valheim-valheim-crossplay-1\"}, {\"FriendlyName\": \"cncnet\", \"ContainerName\": \"cncnet-server\"}, {\"FriendlyName\": \"satisfactory\", \"ContainerName\": \"satisfactory-server\"}]"
+				},
+				"volumes": [
+					{
+						"containerPath": "/var/run/docker.sock",
+						"localPath": "/var/run/docker.sock"
+					}
+				],
+				"remove": true
+			},
+			"netCore": {
+				"appProject": "${workspaceFolder}/GameServerApi/GameServerApi.csproj",
+				"enableDebugging": true
+			}
+		},
+		{
+			"type": "docker-run",
+			"label": "docker-run: release api",
+			"dependsOn": [
+				"docker-build: release api"
+			],
+			"dockerRun": {},
+			"netCore": {
+				"appProject": "${workspaceFolder}/GameServerApi/GameServerApi.csproj"
+			}
+		}
+	]
+}

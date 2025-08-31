@@ -1,0 +1,6 @@
+@GameChatBot_HostAddress = http://localhost:5241
+
+GET {{GameChatBot_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
