@@ -33,6 +33,39 @@ jobs:
   maxRetries: 3
   retryDelay: 30
   timeout: 14400
+- name: 'dotnet cd: GameChatBot'
+  steps:
+  - !CheckoutStep
+    name: checkout code
+    cloneCredential: !HttpCredential
+      accessTokenSecret: Docker-Push
+    withLfs: false
+    withSubmodules: false
+    condition: SUCCESSFUL
+    optional: false
+  - !BuildImageStep
+    name: build + deploy docker image
+    dockerfile: GameChatBot/Dockerfile
+    output: !RegistryOutput
+      tags: onedev.solanes.us/gamechatbot/gamechatbot:latest
+    registryLogins:
+    - registryUrl: '@server_url@'
+      userName: '@job_token@'
+      passwordSecret: Docker-Push
+    condition: SUCCESSFUL
+    optional: false
+  triggers:
+  - !DependencyFinishedTrigger
+    projects: GameChatBot
+  jobDependencies:
+  - jobName: 'dotnet cd: GameServerApi'
+    requireSuccessful: true
+    artifacts: '**'
+  sequentialGroup: cicd
+  retryCondition: never
+  maxRetries: 3
+  retryDelay: 30
+  timeout: 14400
 - name: 'dotnet cd: GameServerApi'
   steps:
   - !CheckoutStep
