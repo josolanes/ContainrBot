@@ -1,0 +1,39 @@
+version: 40
+jobs:
+- name: dotnet ci
+  steps:
+  - !CheckoutStep
+    name: checkout code
+    cloneCredential: !DefaultCredential {}
+    withLfs: false
+    withSubmodules: false
+    condition: SUCCESSFUL
+    optional: false
+  - !GenerateChecksumStep
+    name: generate project checksum
+    files: '**/*.csproj'
+    targetFile: checksum
+    condition: SUCCESSFUL
+    optional: false
+  - !SetupCacheStep
+    name: set up nuget cache
+    key: nuget_packages_@file:checksum@
+    loadKeys:
+    - nuget_packages
+    paths:
+    - /root/.nuget/packages
+    uploadStrategy: UPLOAD_IF_NOT_HIT
+    condition: SUCCESSFUL
+    optional: false
+  triggers:
+  - !BranchUpdateTrigger {}
+  - !PullRequestUpdateTrigger {}
+  retryCondition: never
+  maxRetries: 3
+  retryDelay: 30
+  timeout: 14400
+- name: 'dotnet cd: GameServerApi'
+  retryCondition: never
+  maxRetries: 3
+  retryDelay: 30
+  timeout: 14400
