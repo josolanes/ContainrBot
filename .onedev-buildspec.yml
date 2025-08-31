@@ -57,6 +57,10 @@ jobs:
   triggers:
   - !DependencyFinishedTrigger
     projects: GameChatBot
+  jobDependencies:
+  - jobName: dotnet ci
+    requireSuccessful: true
+    artifacts: '**'
   sequentialGroup: cicd
   retryCondition: never
   maxRetries: 3
