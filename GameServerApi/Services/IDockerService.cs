@@ -1,5 +1,3 @@
-using System;
-
 namespace GameServerApi.Services;
 
 public interface IDockerService

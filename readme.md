@@ -9,7 +9,6 @@ An API exposing game server docker containers and a related chat bot to manipula
 * GAME_SERVERS_LIST: A list of game server data objects with these properties:
   * FriendlyName: The name used when interacting with the chat bot
   * ContainerName: The container name
-* TOKEN: The token to enable clients to reach the API
 
 Examples:
 
@@ -21,6 +20,7 @@ Examples:
 
 * GAMESERVERAPI_TOKEN: Token for the GameServerApi
 * BOT_TOKEN: Token for the chat bot
+* GAMESERVERAPI_BASEURL: Base url of GameServerApi
 
 ## Technologies
 

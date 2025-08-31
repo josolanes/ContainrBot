@@ -42,7 +42,8 @@
 				"env": {
 					"ASPNETCORE_HTTP_PORTS": "8080",
 					"ASPNETCORE_ENVIRONMENT": "Development",
-					"BOT_TOKEN": "MTQxMTE3NTc4OTE4MDc0Nzg1OA.GsKPLR.qn47ynah5IKAgyWGZ3980v9HjzZ-Nig_0kJF-o"
+					"BOT_TOKEN": "MTQxMTE3NTc4OTE4MDc0Nzg1OA.GsKPLR.qn47ynah5IKAgyWGZ3980v9HjzZ-Nig_0kJF-o",
+					"GAMESERVERAPI_BASEURL": "http://192.168.2.5:49280"
 				}
 			},
 			"netCore": {

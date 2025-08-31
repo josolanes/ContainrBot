@@ -1,5 +1,4 @@
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using GameServerApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -66,7 +65,7 @@ app.MapGet("/start/{game}", (string game) =>
 
         dockerService.StartContainer(containerId);
 
-        return Results.Ok("Success");
+        return Results.Ok($"Successfully started {game}!");
     }
     catch (Exception ex)
     {
@@ -94,7 +93,7 @@ app.MapGet("/stop/{game}", (string game) =>
 
         dockerService.StopContainer(containerId);
 
-        return Results.Ok("Success");
+        return Results.Ok($"Successfully stopped {game}!");
     }
     catch (Exception ex)
     {
