@@ -12,6 +12,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Solution Items", "_Solutio
 		readme.md = readme.md
 		.vscode\launch.json = .vscode\launch.json
 		.vscode\tasks.json = .vscode\tasks.json
+		.gitignore = .gitignore
 	EndProjectSection
 EndProject
 Global

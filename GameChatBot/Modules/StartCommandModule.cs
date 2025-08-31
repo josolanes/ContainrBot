@@ -19,7 +19,7 @@ public class GameCommandModule(
 
         string message = status ? string.Join("\n", JsonSerializer.Deserialize<List<string>>(output) ?? []) : $"Unable to retrieve the games list: {output}";
 
-        await Context.Interaction.SendResponseAsync(InteractionCallback.Message(message));
+        await Context.Interaction.SendFollowupMessageAsync(message);
 
         return message;
     }
@@ -31,7 +31,7 @@ public class GameCommandModule(
 
         string message = gameServerApiService.StartGame(name, out bool _).Trim('"');
 
-        await Context.Interaction.SendResponseAsync(InteractionCallback.Message(message));
+        await Context.Interaction.SendFollowupMessageAsync(message);
 
         return message;
     }
@@ -43,7 +43,7 @@ public class GameCommandModule(
 
         string message = gameServerApiService.StopGame(name, out bool _).Trim('"');
 
-        await Context.Interaction.SendResponseAsync(InteractionCallback.Message(message));
+        await Context.Interaction.SendFollowupMessageAsync(message);
 
         return message;
     }
