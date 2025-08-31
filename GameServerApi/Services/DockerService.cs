@@ -83,7 +83,7 @@ public class DockerService : IDockerService
                 UseShellExecute = false,
                 RedirectStandardOutput = true,
                 FileName = "docker",
-                Arguments = $"container inspect -f '{{.State.Running}}' {containerName}"
+                Arguments = $"container inspect -f \"{{{{.State.Running}}}}\" {containerName}"
             }
         };
 
@@ -92,6 +92,6 @@ public class DockerService : IDockerService
         string result = p.StandardOutput.ReadToEnd();
         p.WaitForExit();
 
-        return result == "true";
+        return result.Trim('\n') == "true";
     }
 }
