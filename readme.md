@@ -18,7 +18,6 @@ Examples:
 
 ### Environment Variables
 
-* GAMESERVERAPI_TOKEN: Token for the GameServerApi
 * BOT_TOKEN: Token for the chat bot
 * GAMESERVERAPI_BASEURL: Base url of GameServerApi
 
