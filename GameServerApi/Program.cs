@@ -109,7 +109,7 @@ app.MapGet("/list", () =>
 
         for (int i = 0; i < gameNames.Count(); i++)
         {
-            gameNames[i] = $"{gameNames[i]} = {(dockerService.IsContainerRunning(games[gameNames[i]]) ? "Running" : "Not Running")}";
+            gameNames[i] = $"{gameNames[i]} is {(dockerService.IsContainerRunning(games[gameNames[i]]) ? "running" : "not running")}";
         }
 
         return Results.Ok(gameNames);
