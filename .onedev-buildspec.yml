@@ -54,6 +54,9 @@ jobs:
       passwordSecret: Docker-Push
     condition: SUCCESSFUL
     optional: false
+  triggers:
+  - !DependencyFinishedTrigger
+    projects: GameChatBot
   sequentialGroup: cicd
   retryCondition: never
   maxRetries: 3
