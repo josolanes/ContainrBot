@@ -73,4 +73,25 @@ public class DockerService : IDockerService
 
         return p.ExitCode == 0;
     }
+
+    public bool IsContainerRunning(string containerName)
+    {
+        Process p = new()
+        {
+            StartInfo = new ProcessStartInfo()
+            {
+                UseShellExecute = false,
+                RedirectStandardOutput = true,
+                FileName = "docker",
+                Arguments = $"container inspect -f '{{.State.Running}}' {containerName}"
+            }
+        };
+
+        p.Start();
+
+        string result = p.StandardOutput.ReadToEnd();
+        p.WaitForExit();
+
+        return result == "true";
+    }
 }

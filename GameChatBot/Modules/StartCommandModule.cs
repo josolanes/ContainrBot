@@ -17,7 +17,7 @@ public class GameCommandModule(
 
         var output = gameServerApiService.ListGames(out bool status);
 
-        string message = status ? string.Join(", ", JsonSerializer.Deserialize<List<string>>(output) ?? []) : $"Unable to retrieve the games list: {output}";
+        string message = status ? string.Join("\n", JsonSerializer.Deserialize<List<string>>(output) ?? []) : $"Unable to retrieve the games list: {output}";
 
         await Context.Interaction.SendFollowupMessageAsync(message);
 

@@ -105,7 +105,12 @@ app.MapGet("/list", () =>
 {
     try
     {
-        var gameNames = GetGameKeys();
+        var gameNames = GetGameKeys().ToList();
+
+        for (int i = 0; i < gameNames.Count(); i++)
+        {
+            gameNames[i] = $"{gameNames[i]} = {(dockerService.IsContainerRunning(gameNames[i]) ? "Running" : "Not Running")}";
+        }
 
         return Results.Ok(gameNames);
     }
