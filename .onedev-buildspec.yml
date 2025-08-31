@@ -28,6 +28,7 @@ jobs:
   triggers:
   - !BranchUpdateTrigger {}
   - !PullRequestUpdateTrigger {}
+  sequentialGroup: cicd
   retryCondition: never
   maxRetries: 3
   retryDelay: 30
@@ -53,6 +54,7 @@ jobs:
       passwordSecret: Docker-Push
     condition: SUCCESSFUL
     optional: false
+  sequentialGroup: cicd
   retryCondition: never
   maxRetries: 3
   retryDelay: 30
