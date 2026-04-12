@@ -4,7 +4,8 @@
 ## Get latest from https://github.com/github/gitignore/blob/main/VisualStudio.gitignore
 
 # Ignore files path for debugging
-SolanesTuning/wwwroot/files/
+GameChatBot/obj/Debug/
+GameServerApi/obj/Debug/
 
 # User-specific files
 *.rsuser
