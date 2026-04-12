@@ -6,6 +6,8 @@
 # Ignore files path for debugging
 GameChatBot/obj/Debug/
 GameServerApi/obj/Debug/
+GameChatBot/bin/
+GameServerApi/bin/
 
 # User-specific files
 *.rsuser
