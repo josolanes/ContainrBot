@@ -46,12 +46,12 @@ jobs:
     withSubmodules: false
     condition: SUCCESSFUL
     optional: false
-  - type: BuildImageStep
+  - type: BuildImageWithKanikoStep
     name: build + deploy docker image
-    dockerfile: GameChatBot/Dockerfile
+    buildContext: GameChatBot
     output:
       type: RegistryOutput
-      tags: onedev.solanes.us/gamechatbot/gamechatbot:latest
+      destinations: onedev.solanes.us/gamechatbot/gamechatbot:latest
     registryLogins:
     - registryUrl: '@server_url@'
       userName: '@job_token@'
@@ -81,12 +81,12 @@ jobs:
     withSubmodules: false
     condition: SUCCESSFUL
     optional: false
-  - type: BuildImageStep
+  - type: BuildImageWithKanikoStep
     name: build + deploy docker image
-    dockerfile: GameServerApi/Dockerfile
+    buildContext: GameServerApi
     output:
       type: RegistryOutput
-      tags: onedev.solanes.us/gamechatbot/gameserverapi:latest
+      destinations: onedev.solanes.us/gamechatbot/gameserverapi:latest
     registryLogins:
     - registryUrl: '@server_url@'
       userName: '@job_token@'
