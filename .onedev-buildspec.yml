@@ -48,6 +48,7 @@ jobs:
     optional: false
   - type: BuildImageWithKanikoStep
     name: build + deploy docker image
+    buildContext: GameChatBot
     output:
       type: RegistryOutput
       destinations: onedev.solanes.us/gamechatbot/gamechatbot:latest
@@ -82,6 +83,7 @@ jobs:
     optional: false
   - type: BuildImageWithKanikoStep
     name: build + deploy docker image
+    buildContext: GameServerApi
     output:
       type: RegistryOutput
       destinations: onedev.solanes.us/gamechatbot/gameserverapi:latest
