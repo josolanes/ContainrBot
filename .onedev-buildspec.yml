@@ -26,28 +26,8 @@ jobs:
     uploadStrategy: UPLOAD_IF_NOT_HIT
     condition: SUCCESSFUL
     optional: false
-  triggers:
-  - type: BranchUpdateTrigger
-    userMatch: anyone
-  - type: PullRequestUpdateTrigger
-  sequentialGroup: cicd
-  retryCondition: never
-  maxRetries: 3
-  retryDelay: 30
-  timeout: 14400
-- name: 'dotnet cd: GameChatBot'
-  steps:
-  - type: CheckoutStep
-    name: checkout code
-    cloneCredential:
-      type: HttpCredential
-      accessTokenSecret: Docker-Push
-    withLfs: false
-    withSubmodules: false
-    condition: SUCCESSFUL
-    optional: false
   - type: BuildImageStep
-    name: build + deploy docker image
+    name: build + deploy GameChatBot
     dockerfile: GameChatBot/Dockerfile
     output:
       type: RegistryOutput
@@ -58,31 +38,8 @@ jobs:
       passwordSecret: Docker-Push
     condition: SUCCESSFUL
     optional: false
-  triggers:
-  - type: DependencyFinishedTrigger
-    projects: GameChatBot
-  jobDependencies:
-  - jobName: 'dotnet cd: GameServerApi'
-    requireSuccessful: true
-    artifacts: '**'
-  sequentialGroup: cicd
-  retryCondition: never
-  maxRetries: 3
-  retryDelay: 30
-  timeout: 14400
-- name: 'dotnet cd: GameServerApi'
-  steps:
-  - type: CheckoutStep
-    name: checkout code
-    cloneCredential:
-      type: HttpCredential
-      accessTokenSecret: Docker-Push
-    withLfs: false
-    withSubmodules: false
-    condition: SUCCESSFUL
-    optional: false
   - type: BuildImageStep
-    name: build + deploy docker image
+    name: build + deploy GameServerApi
     dockerfile: GameServerApi/Dockerfile
     output:
       type: RegistryOutput
@@ -93,14 +50,10 @@ jobs:
       passwordSecret: Docker-Push
     condition: SUCCESSFUL
     optional: false
-  jobExecutor: onedev-job
   triggers:
-  - type: DependencyFinishedTrigger
-    projects: GameChatBot
-  jobDependencies:
-  - jobName: dotnet ci
-    requireSuccessful: true
-    artifacts: '**'
+  - type: BranchUpdateTrigger
+    userMatch: anyone
+  - type: PullRequestUpdateTrigger
   sequentialGroup: cicd
   retryCondition: never
   maxRetries: 3
