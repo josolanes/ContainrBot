@@ -1,11 +1,12 @@
+using Microsoft.AspNetCore.JsonPatch;
 using System.Text.Json;
-using GameServerApi.Services;
+using k8s;
+using k8s.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
-builder.Services.AddSingleton<IDockerService, DockerService>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddOpenApiDocument(config =>
@@ -41,7 +42,8 @@ Dictionary<string, string> games = JsonSerializer.Deserialize<List<Game>>(gamesR
 
 app.Logger.LogInformation("Retrieved GAME_SERVER_LIST");
 
-var dockerService = app.Services.GetRequiredService<IDockerService>();
+var config = KubernetesClientConfiguration.InClusterConfig();
+var client =  new Kubernetes(config);
 
 app.MapGet("/", () => "Hello World!");
 
@@ -56,14 +58,22 @@ app.MapGet("/start/{game}", (string game) =>
             return Results.BadRequest($"The game '{game}' is not a valid game.");
         }
 
-        string containerId = dockerService.GetContainerId(games[game]);
+        var deployments = client.ListNamespacedDeployment(game);
 
-        if (String.IsNullOrEmpty(containerId))
+        if (deployments?.Items.Count == 0)
         {
             return Results.BadRequest($"Container doesn't exist for '{game}'.");
         }
 
-        dockerService.StartContainer(containerId);
+        var patch = new JsonPatchDocument<V1Scale>();
+        patch = patch.Replace(e => e.Spec.Replicas, 1);
+
+        var v1Patch = new V1Patch(patch, V1Patch.PatchType.JsonPatch);
+
+        client.PatchNamespacedDeploymentScale(
+            v1Patch,
+            game,
+            game);
 
         return Results.Ok($"Successfully started {game}!");
     }
@@ -84,14 +94,22 @@ app.MapGet("/stop/{game}", (string game) =>
             return Results.BadRequest($"The game '{game}' is not a valid game.");
         }
 
-        string containerId = dockerService.GetContainerId(games[game]);
+        var deployments = client.ListNamespacedDeployment(game);
 
-        if (String.IsNullOrEmpty(containerId))
+        if (deployments?.Items.Count == 0)
         {
             return Results.BadRequest($"Container doesn't exist for '{game}'.");
         }
 
-        dockerService.StopContainer(containerId);
+        var patch = new JsonPatchDocument<V1Scale>();
+        patch = patch.Replace(e => e.Spec.Replicas, 0);
+
+        var v1Patch = new V1Patch(patch, V1Patch.PatchType.JsonPatch);
+
+        client.PatchNamespacedDeploymentScale(
+            v1Patch,
+            game,
+            game);
 
         return Results.Ok($"Successfully stopped {game}!");
     }
@@ -109,7 +127,10 @@ app.MapGet("/list", () =>
 
         for (int i = 0; i < gameNames.Count(); i++)
         {
-            gameNames[i] = $"{gameNames[i]} is {(dockerService.IsContainerRunning(games[gameNames[i]]) ? "running" : "not running")}";
+            var scale = client.ReadNamespacedDeploymentScale(gameNames[i], gameNames[i]);
+            var isRunning = scale.Spec.Replicas > 1;
+            
+            gameNames[i] = $"{gameNames[i]} is {(isRunning ? "running" : "not running")}";
         }
 
         return Results.Ok(gameNames);

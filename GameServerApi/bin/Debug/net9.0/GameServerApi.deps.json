@@ -8,11 +8,44 @@
     ".NETCoreApp,Version=v9.0": {
       "GameServerApi/1.0.0": {
         "dependencies": {
+          "KubernetesClient": "19.0.2",
+          "Microsoft.AspNetCore.JsonPatch": "10.0.5",
           "Microsoft.AspNetCore.OpenApi": "9.0.7",
           "NSwag.AspNetCore": "14.5.0"
         },
         "runtime": {
           "GameServerApi.dll": {}
+        }
+      },
+      "Fractions/7.3.0": {
+        "runtime": {
+          "lib/netstandard2.1/Fractions.dll": {
+            "assemblyVersion": "7.3.0.0",
+            "fileVersion": "7.3.0.0"
+          }
+        }
+      },
+      "KubernetesClient/19.0.2": {
+        "dependencies": {
+          "Fractions": "7.3.0",
+          "YamlDotNet": "16.3.0"
+        },
+        "runtime": {
+          "lib/net9.0/KubernetesClient.dll": {
+            "assemblyVersion": "19.0.0.0",
+            "fileVersion": "19.0.2.63804"
+          }
+        }
+      },
+      "Microsoft.AspNetCore.JsonPatch/10.0.5": {
+        "dependencies": {
+          "Newtonsoft.Json": "13.0.3"
+        },
+        "runtime": {
+          "lib/netstandard2.0/Microsoft.AspNetCore.JsonPatch.dll": {
+            "assemblyVersion": "10.0.5.0",
+            "fileVersion": "10.0.526.15411"
+          }
         }
       },
       "Microsoft.AspNetCore.OpenApi/9.0.7": {
@@ -177,6 +210,27 @@
       "type": "project",
       "serviceable": false,
       "sha512": ""
+    },
+    "Fractions/7.3.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-2bETFWLBc8b7Ut2SVi+bxhGVwiSpknHYGBh2PADyGWONLkTxT7bKyDRhF8ao+XUv90tq8Fl7GTPxSI5bacIRJw==",
+      "path": "fractions/7.3.0",
+      "hashPath": "fractions.7.3.0.nupkg.sha512"
+    },
+    "KubernetesClient/19.0.2": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-0m8FuzCDBygaXMbsb7qVapNZzTm4ftM7ECp/waTRh/XOUQziRF2rKJCRmsvYbBXgJkQvU+FBbkoa40hexzDC+g==",
+      "path": "kubernetesclient/19.0.2",
+      "hashPath": "kubernetesclient.19.0.2.nupkg.sha512"
+    },
+    "Microsoft.AspNetCore.JsonPatch/10.0.5": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-ODGomRlmt8/mFAqVyD9MgE4fXNkO6qDNeKuvmqNDuKjOL2UOkh/wJK0gEXS5VcViHFs+uQKOXD5xoTg1/ouKtA==",
+      "path": "microsoft.aspnetcore.jsonpatch/10.0.5",
+      "hashPath": "microsoft.aspnetcore.jsonpatch.10.0.5.nupkg.sha512"
     },
     "Microsoft.AspNetCore.OpenApi/9.0.7": {
       "type": "package",
