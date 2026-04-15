@@ -66,7 +66,7 @@ app.MapGet("/start/{game}", (string game) =>
         }
 
         var patch = new JsonPatchDocument<V1Scale>();
-        patch = patch.Replace(e => e.Spec.Replicas, 1);
+        patch.Replace(e => e.Spec.Replicas, 1);
 
         var v1Patch = new V1Patch(patch, V1Patch.PatchType.JsonPatch);
 
@@ -104,7 +104,7 @@ app.MapGet("/stop/{game}", (string game) =>
         }
 
         var patch = new JsonPatchDocument<V1Scale>();
-        patch = patch.Replace(e => e.Spec.Replicas, 0);
+        patch.Replace(e => e.Spec.Replicas, 0);
 
         var v1Patch = new V1Patch(patch, V1Patch.PatchType.JsonPatch);
 
