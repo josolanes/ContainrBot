@@ -1,21 +1,22 @@
-version: 40
+version: 46
 jobs:
 - name: dotnet ci
   steps:
-  - !CheckoutStep
+  - type: CheckoutStep
     name: checkout code
-    cloneCredential: !DefaultCredential {}
+    cloneCredential:
+      type: DefaultCredential
     withLfs: false
     withSubmodules: false
     condition: SUCCESSFUL
     optional: false
-  - !GenerateChecksumStep
+  - type: GenerateChecksumStep
     name: generate project checksum
     files: '**/*.csproj'
     targetFile: checksum
     condition: SUCCESSFUL
     optional: false
-  - !SetupCacheStep
+  - type: SetupCacheStep
     name: set up nuget cache
     key: nuget_packages_@file:checksum@
     loadKeys:
@@ -26,8 +27,9 @@ jobs:
     condition: SUCCESSFUL
     optional: false
   triggers:
-  - !BranchUpdateTrigger {}
-  - !PullRequestUpdateTrigger {}
+  - type: BranchUpdateTrigger
+    userMatch: anyone
+  - type: PullRequestUpdateTrigger
   sequentialGroup: cicd
   retryCondition: never
   maxRetries: 3
@@ -35,19 +37,21 @@ jobs:
   timeout: 14400
 - name: 'dotnet cd: GameChatBot'
   steps:
-  - !CheckoutStep
+  - type: CheckoutStep
     name: checkout code
-    cloneCredential: !HttpCredential
+    cloneCredential:
+      type: HttpCredential
       accessTokenSecret: Docker-Push
     withLfs: false
     withSubmodules: false
     condition: SUCCESSFUL
     optional: false
-  - !BuildImageStep
+  - type: BuildImageWithKanikoStep
     name: build + deploy docker image
-    dockerfile: GameChatBot/Dockerfile
-    output: !RegistryOutput
-      tags: onedev.solanes.us/gamechatbot/gamechatbot:latest
+    buildContext: GameChatBot
+    output:
+      type: RegistryOutput
+      destinations: onedev.solanes.us/gamechatbot/gamechatbot:latest
     registryLogins:
     - registryUrl: '@server_url@'
       userName: '@job_token@'
@@ -55,7 +59,7 @@ jobs:
     condition: SUCCESSFUL
     optional: false
   triggers:
-  - !DependencyFinishedTrigger
+  - type: DependencyFinishedTrigger
     projects: GameChatBot
   jobDependencies:
   - jobName: 'dotnet cd: GameServerApi'
@@ -68,27 +72,30 @@ jobs:
   timeout: 14400
 - name: 'dotnet cd: GameServerApi'
   steps:
-  - !CheckoutStep
+  - type: CheckoutStep
     name: checkout code
-    cloneCredential: !HttpCredential
+    cloneCredential:
+      type: HttpCredential
       accessTokenSecret: Docker-Push
     withLfs: false
     withSubmodules: false
     condition: SUCCESSFUL
     optional: false
-  - !BuildImageStep
+  - type: BuildImageWithKanikoStep
     name: build + deploy docker image
-    dockerfile: GameServerApi/Dockerfile
-    output: !RegistryOutput
-      tags: onedev.solanes.us/gamechatbot/gameserverapi:latest
+    buildContext: GameServerApi
+    output:
+      type: RegistryOutput
+      destinations: onedev.solanes.us/gamechatbot/gameserverapi:latest
     registryLogins:
     - registryUrl: '@server_url@'
       userName: '@job_token@'
       passwordSecret: Docker-Push
     condition: SUCCESSFUL
     optional: false
+  jobExecutor: onedev-job
   triggers:
-  - !DependencyFinishedTrigger
+  - type: DependencyFinishedTrigger
     projects: GameChatBot
   jobDependencies:
   - jobName: dotnet ci
