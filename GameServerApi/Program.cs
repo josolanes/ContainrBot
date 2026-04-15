@@ -142,9 +142,18 @@ app.MapGet("/list", () =>
         
         for (int i = 0; i < games.Count(); i++)
         {
-            var scale = client.ReadNamespacedDeploymentScale(games[i].DeployName, games[i].Namespace);
-            var isRunning = scale.Spec.Replicas is > 1;
-            
+            var isRunning = true;
+
+            try
+            {
+                var scale = client.ReadNamespacedDeploymentScale(games[i].DeployName, games[i].Namespace);
+                isRunning = scale.Spec.Replicas is > 1;
+            }
+            catch
+            {
+                isRunning = false;
+            }
+
             output.Add($"{games[i].FriendlyName} is {(isRunning ? "running" : "not running")}");
         }
 
