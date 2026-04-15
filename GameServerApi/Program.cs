@@ -147,7 +147,7 @@ app.MapGet("/list", () =>
             try
             {
                 var scale = client.ReadNamespacedDeploymentScale(games[i].DeployName, games[i].Namespace);
-                isRunning = scale.Spec.Replicas is > 1;
+                isRunning = scale.Spec.Replicas is > 0;
             }
             catch
             {
