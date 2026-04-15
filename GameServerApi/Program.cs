@@ -131,7 +131,7 @@ app.MapGet("/list", () =>
         {
             app.Logger.LogInformation($"{gameNames[i]}: {games[gameNames[i]]}");
 
-            var scale = client.ReadNamespacedDeploymentScale(games[gameNames[i]], games[gameNames[i]]);
+            var scale = client.ReadNamespacedDeploymentScale("deploy", games[gameNames[i]]);
             var isRunning = scale.Spec.Replicas is > 1;
             
             gameNames[i] = $"{gameNames[i]} is {(isRunning ? "running" : "not running")}";
