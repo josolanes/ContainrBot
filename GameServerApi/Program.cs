@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.JsonPatch;
 using System.Text.Json;
 using k8s;
 using k8s.Models;
+using Newtonsoft.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -58,7 +59,9 @@ app.MapGet("/start/{game}", (string game) =>
             return Results.BadRequest($"The game '{game}' is not a valid game.");
         }
 
-        var deployments = client.ListNamespacedDeployment(game);
+        var currentGame = games.FirstOrDefault(g => g.FriendlyName == game);
+
+        var deployments = client.ListNamespacedDeployment(currentGame.Namespace);
 
         if (deployments?.Items.Count == 0)
         {
@@ -66,13 +69,17 @@ app.MapGet("/start/{game}", (string game) =>
         }
 
         var patch = new JsonPatchDocument<V1Scale>();
+        patch.ContractResolver = new DefaultContractResolver
+        {
+            NamingStrategy = new CamelCaseNamingStrategy()
+        };
         patch.Replace(e => e.Spec.Replicas, 1);
-
-        var v1Patch = new V1Patch(patch, V1Patch.PatchType.JsonPatch);
-
-        var currentGame = games.FirstOrDefault(g => g.FriendlyName == game);
         
-        client.PatchNamespacedDeploymentScale(
+        var jsonPatchString = Newtonsoft.Json.JsonConvert.SerializeObject(patch);
+
+        var v1Patch = new V1Patch(jsonPatchString, V1Patch.PatchType.JsonPatch);
+
+        client.AppsV1.PatchNamespacedDeploymentScale(
             v1Patch,
             currentGame.DeployName,
             currentGame.Namespace);
@@ -102,13 +109,19 @@ app.MapGet("/stop/{game}", (string game) =>
         {
             return Results.BadRequest($"'{game}' doesn't seem to be deployed.");
         }
-
+        
         var patch = new JsonPatchDocument<V1Scale>();
+        patch.ContractResolver = new DefaultContractResolver
+        {
+            NamingStrategy = new CamelCaseNamingStrategy()
+        };
         patch.Replace(e => e.Spec.Replicas, 0);
+        
+        var jsonPatchString = Newtonsoft.Json.JsonConvert.SerializeObject(patch);
 
-        var v1Patch = new V1Patch(patch, V1Patch.PatchType.JsonPatch);
+        var v1Patch = new V1Patch(jsonPatchString, V1Patch.PatchType.JsonPatch);
 
-        client.PatchNamespacedDeploymentScale(
+        client.AppsV1.PatchNamespacedDeploymentScale(
             v1Patch,
             currentGame.DeployName,
             currentGame.Namespace);
