@@ -35,6 +35,8 @@ if (app.Environment.IsDevelopment())
     });
 }
 
+app.UseDeveloperExceptionPage();
+
 app.Logger.LogInformation("Logging is working");
 
 string gamesRaw = builder.Configuration.GetValue<string>("GAME_SERVER_LIST") ?? throw new InvalidOperationException("Environment variable not set: GAME_SERVER_LIST");
@@ -128,9 +130,9 @@ app.MapGet("/list", () =>
         for (int i = 0; i < gameNames.Count(); i++)
         {
             app.Logger.LogInformation($"{gameNames[i]}: {games[gameNames[i]]}");
-            
+
             var scale = client.ReadNamespacedDeploymentScale(games[gameNames[i]], games[gameNames[i]]);
-            var isRunning = scale.Spec.Replicas.HasValue && scale.Spec.Replicas > 1;
+            var isRunning = scale.Spec.Replicas is > 1;
             
             gameNames[i] = $"{gameNames[i]} is {(isRunning ? "running" : "not running")}";
         }
