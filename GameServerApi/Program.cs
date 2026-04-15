@@ -139,7 +139,7 @@ app.MapGet("/list", () =>
     }
     catch (Exception ex)
     {
-        return Results.InternalServerError(ex);
+        return Results.InternalServerError("blarg" + ex);
     }
 });
 
