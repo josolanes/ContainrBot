@@ -70,10 +70,12 @@ app.MapGet("/start/{game}", (string game) =>
 
         var v1Patch = new V1Patch(patch, V1Patch.PatchType.JsonPatch);
 
+        var currentGame = games.FirstOrDefault(g => g.FriendlyName == game);
+        
         client.PatchNamespacedDeploymentScale(
             v1Patch,
-            game,
-            game);
+            currentGame.DeployName,
+            currentGame.Namespace);
 
         return Results.Ok($"Successfully started {game}!");
     }
@@ -91,8 +93,10 @@ app.MapGet("/stop/{game}", (string game) =>
         {
             return Results.BadRequest($"The game '{game}' is not a valid game.");
         }
+        
+        var currentGame = games.FirstOrDefault(g => g.FriendlyName == game);
 
-        var deployments = client.ListNamespacedDeployment(game);
+        var deployments = client.ListNamespacedDeployment(currentGame.Namespace);
 
         if (deployments?.Items.Count == 0)
         {
@@ -106,8 +110,8 @@ app.MapGet("/stop/{game}", (string game) =>
 
         client.PatchNamespacedDeploymentScale(
             v1Patch,
-            game,
-            game);
+            currentGame.DeployName,
+            currentGame.Namespace);
 
         return Results.Ok($"Successfully stopped {game}!");
     }
