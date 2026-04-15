@@ -127,7 +127,7 @@ app.MapGet("/list", () =>
 
         for (int i = 0; i < gameNames.Count(); i++)
         {
-            Console.Out.WriteLine(gameNames[i]);
+            app.Logger.LogInformation(gameNames[i]);
             
             var scale = client.ReadNamespacedDeploymentScale(gameNames[i], gameNames[i]);
             var isRunning = scale.Spec.Replicas.HasValue && scale.Spec.Replicas > 1;
@@ -139,7 +139,7 @@ app.MapGet("/list", () =>
     }
     catch (Exception ex)
     {
-        return Results.InternalServerError("blarg" + ex);
+        return Results.InternalServerError(ex);
     }
 });
 
