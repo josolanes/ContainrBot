@@ -42,8 +42,8 @@ Dictionary<string, string> games = JsonSerializer.Deserialize<List<Game>>(gamesR
 
 app.Logger.LogInformation("Retrieved GAME_SERVER_LIST");
 
-var config = KubernetesClientConfiguration.InClusterConfig();
-var client =  new Kubernetes(config);
+var k8sConfig = KubernetesClientConfiguration.InClusterConfig();
+var client =  new Kubernetes(k8sConfig);
 
 app.MapGet("/", () => "Hello World!");
 
