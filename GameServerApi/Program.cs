@@ -40,7 +40,7 @@ app.UseDeveloperExceptionPage();
 app.Logger.LogInformation("Logging is working");
 
 string gamesRaw = builder.Configuration.GetValue<string>("GAME_SERVER_LIST") ?? throw new InvalidOperationException("Environment variable not set: GAME_SERVER_LIST");
-Dictionary<string, string> games = JsonSerializer.Deserialize<List<Game>>(gamesRaw)?.ToDictionary(k => k.FriendlyName, v => v.ContainerName) ?? [];
+List<Game> games = JsonSerializer.Deserialize<List<Game>>(gamesRaw) ?? [];
 
 app.Logger.LogInformation("Retrieved GAME_SERVER_LIST");
 
@@ -53,9 +53,7 @@ app.MapGet("/start/{game}", (string game) =>
 {
     try
     {
-        var gameNames = GetGameKeys();
-
-        if (!gameNames.Contains(game))
+        if (!games.Exists(e => e.FriendlyName == game))
         {
             return Results.BadRequest($"The game '{game}' is not a valid game.");
         }
@@ -64,7 +62,7 @@ app.MapGet("/start/{game}", (string game) =>
 
         if (deployments?.Items.Count == 0)
         {
-            return Results.BadRequest($"Container doesn't exist for '{game}'.");
+            return Results.BadRequest($"'{game}' doesn't seem to be deployed.");
         }
 
         var patch = new JsonPatchDocument<V1Scale>();
@@ -89,9 +87,7 @@ app.MapGet("/stop/{game}", (string game) =>
 {
     try
     {
-        var gameNames = GetGameKeys();
-
-        if (!gameNames.Contains(game))
+        if (!games.Exists(e => e.FriendlyName == game))
         {
             return Results.BadRequest($"The game '{game}' is not a valid game.");
         }
@@ -100,7 +96,7 @@ app.MapGet("/stop/{game}", (string game) =>
 
         if (deployments?.Items.Count == 0)
         {
-            return Results.BadRequest($"Container doesn't exist for '{game}'.");
+            return Results.BadRequest($"'{game}' doesn't seem to be deployed.");
         }
 
         var patch = new JsonPatchDocument<V1Scale>();
@@ -125,19 +121,17 @@ app.MapGet("/list", () =>
 {
     try
     {
-        var gameNames = GetGameKeys().ToList();
-
-        for (int i = 0; i < gameNames.Count(); i++)
+        List<string> output = [];
+        
+        for (int i = 0; i < games.Count(); i++)
         {
-            app.Logger.LogInformation($"{gameNames[i]}: {games[gameNames[i]]}");
-
-            var scale = client.ReadNamespacedDeploymentScale("deploy", games[gameNames[i]]);
+            var scale = client.ReadNamespacedDeploymentScale(games[i].DeployName, games[i].Namespace);
             var isRunning = scale.Spec.Replicas is > 1;
             
-            gameNames[i] = $"{gameNames[i]} is {(isRunning ? "running" : "not running")}";
+            output.Add($"{games[i].FriendlyName} is {(isRunning ? "running" : "not running")}");
         }
 
-        return Results.Ok(gameNames);
+        return Results.Ok(output);
     }
     catch (Exception ex)
     {
@@ -149,14 +143,11 @@ app.Logger.LogInformation("Mapped endpoints");
 
 app.Run();
 
-IEnumerable<string> GetGameKeys()
-{
-    return games.Keys.Select(k => k);
-}
-
 struct Game
 {
     public string FriendlyName { get; set; }
 
-    public string ContainerName { get; set; }
+    public string DeployName { get; set; }
+    
+    public string Namespace { get; set; }
 }

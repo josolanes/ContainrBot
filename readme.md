@@ -12,7 +12,7 @@ An API exposing game server docker containers and a related chat bot to manipula
 
 Examples:
 
-```GAME_SERVER_LIST: "[{\"FriendlyName\": \"valheim\", \"ContainerName\": \"valheim-valheim-crossplay-1\"}, {\"FriendlyName\": \"cncnet\", \"ContainerName\": \"cncnet-server\"}, {\"FriendlyName\": \"satisfactory\", \"ContainerName\": \"satisfactory-server\"}]"```
+```GAME_SERVER_LIST: "[{\"FriendlyName\": \"valheim\", \"DeployName\": \"deploy\", \"Namespace\": \"valheim-server\"}, {\"FriendlyName\": \"cncnet\", \"DeployName\": \"deploy\", \"Namespace\": \"cncnet-server\"}, {\"FriendlyName\": \"satisfactory\", \"DeployName\": \"deploy\", \"Namespace\": \"satisfactory-server\"}]"```
 
 ## GameChatBot
 
