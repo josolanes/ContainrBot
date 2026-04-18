@@ -14,14 +14,6 @@ on:
     tags: [ 'v*.*.*' ]
   pull_request:
     branches: [ "main" ]
-    
-strategy:
-  matrix:
-    include:
-      - image: gameserverapi
-        context: ./GameServerApi
-      - image: gamechatbot
-        context: ./GameChatBot
 
 env:
   # Use docker.io for Docker Hub if empty
@@ -40,6 +32,14 @@ jobs:
       # This is used to complete the identity challenge
       # with sigstore/fulcio when running outside of PRs.
       id-token: write
+      
+    strategy:
+      matrix:
+        include:
+          - image: gameserverapi
+            context: ./GameServerApi
+          - image: gamechatbot
+            context: ./GameChatBot
 
     steps:
       - name: Checkout repository
