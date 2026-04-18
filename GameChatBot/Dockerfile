@@ -5,8 +5,7 @@ EXPOSE 8080
 FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 ARG configuration=Release
 WORKDIR /src
-COPY . GameChatBot/
-#COPY ["GameChatBot/GameChatBot.csproj", "GameChatBot/"]
+COPY ["GameChatBot/GameChatBot.csproj", "GameChatBot/"]
 RUN dotnet restore "GameChatBot/GameChatBot.csproj"
 COPY . .
 WORKDIR "/src/GameChatBot"

@@ -5,7 +5,7 @@ EXPOSE 8080
 FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 ARG configuration=Release
 WORKDIR /src
-COPY . GameServerApi/
+COPY ["GameServerApi/GameServerApi.csproj", "GameServerApi/"]
 RUN dotnet restore "GameServerApi/GameServerApi.csproj"
 COPY . .
 WORKDIR "/src/GameServerApi"
