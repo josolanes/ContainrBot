@@ -1,6 +1,6 @@
 # GameChatBot
 
-An API exposing game server docker containers and a related chat bot to manipulate game servers.
+An API exposing game server kubernetes containers and a related chat bot to manipulate game servers.
 
 ## GameServerApi
 
@@ -8,7 +8,8 @@ An API exposing game server docker containers and a related chat bot to manipula
 
 * GAME_SERVERS_LIST: A list of game server data objects with these properties:
   * FriendlyName: The name used when interacting with the chat bot
-  * ContainerName: The container name
+  * DeployName: The deploy name for the game server
+  * Namespace: The namespace for the game server
 
 Examples:
 
@@ -23,5 +24,5 @@ Examples:
 
 ## Technologies
 
-* NET 9.0
-* NetCord
+* NET 10.0
+* Kubernetes-client
