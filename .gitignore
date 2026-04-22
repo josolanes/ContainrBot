@@ -4,10 +4,10 @@
 ## Get latest from https://github.com/github/gitignore/blob/main/VisualStudio.gitignore
 
 # Ignore files path for debugging
-GameChatBot/obj/Debug/
-GameServerApi/obj/Debug/
-GameChatBot/bin/
-GameServerApi/bin/
+ContainrBot/obj/Debug/
+ContainrBotApi/obj/Debug/
+ContainrBot/bin/
+ContainrBotApi/bin/
 
 # User-specific files
 *.rsuser

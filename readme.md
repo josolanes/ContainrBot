@@ -1,28 +1,31 @@
-# GameChatBot
+# ContainrBot
 
-An API exposing game server kubernetes containers and a related chat bot to manipulate game servers.
+An API exposing docker and kubernetes deploys and a related chat bot to manipulate deploys.
 
-## GameServerApi
+## ContainrBotApi
 
 ### Environment Variables
 
-* GAME_SERVERS_LIST: A list of game server data objects with these properties:
+* CONTAINER_LIST: A list of container data objects with these properties:
   * FriendlyName: The name used when interacting with the chat bot
-  * DeployName: The deploy name for the game server
-  * Namespace: The namespace for the game server
+  * ContainerName: The container name for the deployable
+  * Namespace: The namespace for the deployable (kubernetes only)
 
 Examples:
 
-```GAME_SERVER_LIST: "[{\"FriendlyName\": \"valheim\", \"DeployName\": \"deploy\", \"Namespace\": \"valheim-server\"}, {\"FriendlyName\": \"cncnet\", \"DeployName\": \"deploy\", \"Namespace\": \"cncnet-server\"}, {\"FriendlyName\": \"satisfactory\", \"DeployName\": \"deploy\", \"Namespace\": \"satisfactory-server\"}]"```
+```
+CONTAINER_LIST: "[{\"FriendlyName\": \"valheim\", \"Container\": \"deploy\", \"Namespace\": \"valheim-server\"}, {\"FriendlyName\": \"cncnet\", \"Container\": \"deploy\", \"Namespace\": \"cncnet-server\"}, {\"FriendlyName\": \"satisfactory\", \"Container\": \"deploy\", \"Namespace\": \"satisfactory-server\"}]"
+```
 
-## GameChatBot
+## ContainrBot
 
 ### Environment Variables
 
-* BOT_TOKEN: Token for the chat bot
-* GAMESERVERAPI_BASEURL: Base url of GameServerApi
+* BOT_TOKEN: Token for the chat bot (Discord Bot Token, etc)
+* CONTAINRBOTAPI_BASEURL: Base url of GameServerApi
 
 ## Technologies
 
 * NET 10.0
-* Kubernetes-client
+* Kubernetes-client for Kubernetes management
+* NetCord for setting up the bot interactions with Discord
