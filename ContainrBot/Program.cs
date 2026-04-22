@@ -10,7 +10,7 @@ builder.Services.AddScoped<IContainrBotApiService, ContainrBotApiService>();
 builder.Services.AddHttpClient();
 
 var token = builder.Configuration.GetValue<string>("BOT_TOKEN") ?? throw new InvalidOperationException("Environment variable not set: BOT_TOKEN");
-var baseUrl = builder.Configuration.GetValue<string>("GAMESERVERAPI_BASEURL") ?? throw new InvalidOperationException("Environment variable not set: GAMESERVERAPI_BASEURL");
+var baseUrl = builder.Configuration.GetValue<string>("CONTAINRBOTAPI_BASEURL") ?? throw new InvalidOperationException("Environment variable not set: CONTAINRBOTAPI_BASEURL");
 
 builder.Services
     .AddDiscordGateway(new Action<GatewayClientOptions>(options =>
