@@ -81,7 +81,7 @@ app.MapGet("/start/{container}", (string container) =>
 
         client.AppsV1.PatchNamespacedDeploymentScale(
             v1Patch,
-            currentContainer.DeployName,
+            currentContainer.ContainerName,
             currentContainer.Namespace);
 
         return Results.Ok($"Successfully started {container}!");
@@ -123,7 +123,7 @@ app.MapGet("/stop/{container}", (string container) =>
 
         client.AppsV1.PatchNamespacedDeploymentScale(
             v1Patch,
-            currentContainer.DeployName,
+            currentContainer.ContainerName,
             currentContainer.Namespace);
 
         return Results.Ok($"Successfully stopped {container}!");
@@ -144,7 +144,7 @@ app.MapGet("/list", () =>
         {
             try
             {
-                var scale = client.ReadNamespacedDeploymentScale(containers[i].DeployName, containers[i].Namespace);
+                var scale = client.ReadNamespacedDeploymentScale(containers[i].ContainerName, containers[i].Namespace);
                 var isRunning = scale.Spec.Replicas is > 0;
                 
                 output.Add($"{containers[i].FriendlyName} is {(isRunning ? "running" : "not running")}");
