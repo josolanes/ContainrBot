@@ -6,6 +6,8 @@ public interface IOrchestrator
 {
 	string Name { get; }
 
+	List<string> RequiredContainerProperties { get; }
+
 	Task<IList<string>> List(IList<Container> containers);
 
 	Task Start(Container container);
@@ -17,4 +19,6 @@ public interface IOrchestrator
 	Task<bool> Exists(Container container);
 
 	Task<bool> CanConnect();
+	
+	Task<bool> IsContainerValid(Container container);
 }

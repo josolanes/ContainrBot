@@ -8,7 +8,7 @@
       CHATBOT: discord
       CONTAINRBOTAPI_BASEURL: containerbotapi
     secrets:
-      - bot_token
+      - bot-token
   containrbotapi:
     image: containrbotapi
     build:
@@ -21,5 +21,5 @@
       CONTAINER_LIST: "[{\"FriendlyName\": \"valheim\", \"ContainerName\": \"deploy\", \"Namespace\": \"valheim-server\"}, {\"FriendlyName\": \"cncnet\", \"ContainerName\": \"deploy\", \"Namespace\": \"cncnet-server\"}, {\"FriendlyName\": \"satisfactory\", \"ContainerName\": \"deploy\", \"Namespace\": \"satisfactory-server\"}]"
 
 secrets:
-  bot_token:
-    file: ./containrbot/local-only/secrets/bot_token.txt
+  bot-token:
+    file: ./containrbot/local-only/secrets/bot-token.txt

@@ -15,6 +15,13 @@ public class KubernetesOrchestrator : IOrchestrator
 
 	public string Name { get; } = "Kubernetes";
 
+	public List<string> RequiredContainerProperties { get; } =
+	[
+		nameof(Container.ContainerName),
+		nameof(Container.FriendlyName),
+		nameof(Container.Namespace)
+	];
+
 	public async Task<IList<string>> List(IList<Container> containers)
 	{
 		List<string> output = [];
@@ -120,5 +127,12 @@ public class KubernetesOrchestrator : IOrchestrator
 	public async Task<bool> CanConnect()
 	{
 		return await Task.FromResult((await Client.ListNodeAsync())?.Items?.Any() ?? false);
+	}
+
+	public Task<bool> IsContainerValid(Container container)
+	{
+		return Task.FromResult(!string.IsNullOrEmpty(container.ContainerName)
+		       && !string.IsNullOrEmpty(container.FriendlyName)
+		       && !string.IsNullOrEmpty(container.ContainerName));
 	}
 }
