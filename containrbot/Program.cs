@@ -8,13 +8,17 @@ using NetCord.Hosting.Services.ApplicationCommands;
 var builder = WebApplication.CreateBuilder(args);
 
 // Fixed services
-builder.Services.AddHttpClient();
 builder.Services.AddScoped<IContainrBotApiService, ContainrBotApiService>();
 
 // Get required environment variables (will error if not set)
 var chatbot = Helpers.GetRequiredEnvironmentVariable(builder, "CHATBOT");
-Helpers.GetRequiredEnvironmentVariable(builder, "CONTAINRBOTAPI_BASEURL");
+var containrbotapiUrl = Helpers.GetRequiredEnvironmentVariable(builder, "CONTAINRBOTAPI_BASEURL");
 var token = GetBotToken();
+
+builder.Services.AddHttpClient("containrbotapi", client =>
+{
+	client.BaseAddress = new Uri(containrbotapiUrl);
+});
 
 // Conditional services
 switch (chatbot.ToLowerInvariant())

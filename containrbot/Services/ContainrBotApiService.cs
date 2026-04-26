@@ -26,8 +26,7 @@ public class ContainrBotApiService(
 
 	private async Task<string> GetRequest(string action, string container = "")
 	{
-		var baseUrl = configuration.GetValue<string>("CONTAINRBOTAPI_BASEURL");
-		var url = $"{baseUrl}/{action}";
+		var url = action;
 
 		if (!string.IsNullOrEmpty(container))
 		{
