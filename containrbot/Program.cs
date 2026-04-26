@@ -12,11 +12,9 @@ builder.Services.AddHttpClient();
 builder.Services.AddSingleton<IContainrBotApiService, ContainrBotApiService>();
 
 // Get required environment variables (will error if not set)
-const string botTokenSecretPath = "/run/secrets/bot-token";
-
 var chatbot = Helpers.GetRequiredEnvironmentVariable(builder, "CHATBOT");
-var token = File.Exists(botTokenSecretPath) ? File.ReadAllText(botTokenSecretPath).Trim() : throw new InvalidOperationException($"Secret file not set: bot-token");
 Helpers.GetRequiredEnvironmentVariable(builder, "CONTAINRBOTAPI_BASEURL");
+var token = GetBotToken();
 
 // Conditional services
 switch (chatbot.ToLowerInvariant())
@@ -56,3 +54,24 @@ switch (chatbot.ToLowerInvariant())
 await host.RunAsync();
 
 // private methods
+string GetBotToken()
+{
+	const string botTokenSecretPathDocker = "/run/secrets/bot-token";
+	const string botTokenSecretPathKubernetes = "/run/secrets/bot-token/bot-token";
+	
+	var token = "";
+	if (File.Exists(botTokenSecretPathDocker))
+	{
+		token = File.ReadAllText(botTokenSecretPathDocker).Trim();
+	}
+	else if (File.Exists($"{botTokenSecretPathKubernetes}/bot-token"))
+	{
+		token = File.ReadAllText($"{botTokenSecretPathKubernetes}/bot-token").Trim();
+	}
+	else
+	{
+		throw new InvalidOperationException($"Secret file not set: bot-token");
+	}
+
+	return token;
+}
