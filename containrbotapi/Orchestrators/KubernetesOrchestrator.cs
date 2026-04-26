@@ -1,4 +1,6 @@
+using System.Text.Json;
 using ContainrBotApi.Models.Internal;
+using Json.Patch;
 using k8s;
 using k8s.Autorest;
 using k8s.Models;
@@ -88,21 +90,21 @@ public class KubernetesOrchestrator : IOrchestrator
 
 	public async Task Restart(Container container)
 	{
-		var deployment = await Client.ReadNamespacedDeploymentAsync(container.ContainerName, container.Namespace);
+		var deployment = await Client.AppsV1.ReadNamespacedDeploymentAsync(container.ContainerName, container.Namespace).ConfigureAwait(false);
+		var options = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase, WriteIndented = true };
+		var old = System.Text.Json.JsonSerializer.SerializeToDocument(deployment, options);
+		var now = DateTimeOffset.Now.ToUnixTimeSeconds();
 		var restart = new Dictionary<string, string>
 		{
-			["kubectl.kubernetes.io/restartedAt"] = DateTime.UtcNow.ToString("s") + "Z"
+			["date"] = now.ToString(),
 		};
 
-		var patch = new JsonPatchDocument<V1Deployment>();
-		patch.Replace(e => e.Spec.Template.Metadata.Annotations, restart);
+		deployment.Spec.Template.Metadata.Annotations = restart;
 
-		var jsonPatchString = JsonConvert.SerializeObject(patch);
+		var expected = System.Text.Json.JsonSerializer.SerializeToDocument(deployment);
 
-		await Client.AppsV1.PatchNamespacedDeploymentAsync(
-			new V1Patch(jsonPatchString, V1Patch.PatchType.JsonPatch),
-			container.ContainerName,
-			container.Namespace);
+		var patch = old.CreatePatch(expected);
+		await Client.AppsV1.PatchNamespacedDeploymentAsync(new V1Patch(patch, V1Patch.PatchType.JsonPatch), container.ContainerName, container.Namespace).ConfigureAwait(false);
 	}
 
 	public async Task<bool> Exists(Container container)

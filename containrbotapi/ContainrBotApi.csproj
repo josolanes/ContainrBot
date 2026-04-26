@@ -13,6 +13,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="JsonPatch.Net" Version="5.0.2" />
         <PackageReference Include="KubernetesClient" Version="19.0.2"/>
         <PackageReference Include="Microsoft.AspNetCore.JsonPatch" Version="10.0.5"/>
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.7"/>
