@@ -64,9 +64,9 @@ string GetBotToken()
 	{
 		botToken = File.ReadAllText(botTokenSecretPathDocker).Trim();
 	}
-	else if (File.Exists($"{botTokenSecretPathKubernetes}/bot-token"))
+	else if (File.Exists(botTokenSecretPathKubernetes))
 	{
-		botToken = File.ReadAllText($"{botTokenSecretPathKubernetes}/bot-token").Trim();
+		botToken = File.ReadAllText(botTokenSecretPathKubernetes).Trim();
 	}
 	else
 	{
