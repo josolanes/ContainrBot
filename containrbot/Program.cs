@@ -59,19 +59,19 @@ string GetBotToken()
 	const string botTokenSecretPathDocker = "/run/secrets/bot-token";
 	const string botTokenSecretPathKubernetes = "/run/secrets/bot-token/bot-token";
 	
-	var token = "";
+	var botToken = "";
 	if (File.Exists(botTokenSecretPathDocker))
 	{
-		token = File.ReadAllText(botTokenSecretPathDocker).Trim();
+		botToken = File.ReadAllText(botTokenSecretPathDocker).Trim();
 	}
 	else if (File.Exists($"{botTokenSecretPathKubernetes}/bot-token"))
 	{
-		token = File.ReadAllText($"{botTokenSecretPathKubernetes}/bot-token").Trim();
+		botToken = File.ReadAllText($"{botTokenSecretPathKubernetes}/bot-token").Trim();
 	}
 	else
 	{
 		throw new InvalidOperationException($"Secret file not set: bot-token");
 	}
 
-	return token;
+	return botToken;
 }
