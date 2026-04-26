@@ -99,7 +99,7 @@ public class KubernetesOrchestrator : IOrchestrator
 
 		var jsonPatchString = JsonConvert.SerializeObject(patch);
 
-		await Client.AppsV1.PatchNamespacedDeploymentScaleAsync(
+		await Client.AppsV1.PatchNamespacedDeploymentAsync(
 			new V1Patch(jsonPatchString, V1Patch.PatchType.JsonPatch),
 			container.ContainerName,
 			container.Namespace);
