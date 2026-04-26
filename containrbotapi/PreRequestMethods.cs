@@ -5,7 +5,8 @@ namespace ContainrBotApi;
 
 public static class PreRequestMethods
 {
-	public static async ValueTask<object?> CanConnectToOrchestrator(EndpointFilterInvocationContext invocationContext,
+	public static async ValueTask<object?> CanConnectToOrchestrator(
+		EndpointFilterInvocationContext invocationContext,
 		EndpointFilterDelegate next)
 	{
 		var orchestrator = invocationContext.GetArgument<IOrchestrator>(0);
@@ -38,13 +39,31 @@ public static class PreRequestMethods
 		EndpointFilterDelegate next,
 		List<Container> containers)
 	{
-		var container = invocationContext.GetArgument<string>(0);
+		var container = invocationContext.GetArgument<string>(1);
 
 		if (!containers.Exists(e => e.FriendlyName == container))
 		{
-			return Results.BadRequest($"The container '{container}' is not a valid container.");
+			return Results.BadRequest($"The container '{container}' does not exist in your 'CONTAINER_LIST' environment variable. Please use the API /debug endpoint for more information");
 		}
 
+		return await next(invocationContext);
+	}
+	
+	public static async ValueTask<object?> IsValidContainer(
+		EndpointFilterInvocationContext invocationContext,
+		EndpointFilterDelegate next,
+		List<Container> containers)
+	{
+		var orchestrator = invocationContext.GetArgument<IOrchestrator>(0);
+		var currentContainer = invocationContext.GetArgument<string>(1);
+		var isValidContainer = await orchestrator.IsContainerValid(containers.FirstOrDefault(e => e.FriendlyName == currentContainer));
+
+		if (!isValidContainer)
+		{
+			return Results.BadRequest(
+				$"The container '{currentContainer}' is misconfigured in the 'CONTAINER_LIST' environment variable for the selected orchestrator '{orchestrator.Name}'. Required container properties are: {string.Join(", ", orchestrator.RequiredContainerProperties)}. Please use the API /debug endpoint for more information");
+		}
+		
 		return await next(invocationContext);
 	}
 }

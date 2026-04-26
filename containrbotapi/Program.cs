@@ -1,3 +1,4 @@
+using System.Collections.ObjectModel;
 using ContainrBot.Library;
 using ContainrBotApi;
 using ContainrBotApi.Models;
@@ -7,7 +8,7 @@ using JsonSerializer = System.Text.Json.JsonSerializer;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var orchestratorVariable = Helpers.GetRequiredEnvironmentVariable(builder, "ORCHESTRATOR");
+var orchestratorVariable = Helpers.GetRequiredEnvironmentVariable(builder, "ORCHESTRATOR")?.ToLowerInvariant();
 var containersRaw = Helpers.GetRequiredEnvironmentVariable(builder, "CONTAINER_LIST");
 var containers = JsonSerializer.Deserialize<List<Container>>(containersRaw) ?? [];
 
@@ -23,14 +24,17 @@ builder.Services.AddOpenApiDocument(config =>
 	config.Version = "v1";
 });
 
-switch (orchestratorVariable.ToLowerInvariant())
+
+// Custom services
+var orchestrators = new ReadOnlyDictionary<string, IOrchestrator>(new Dictionary<string, IOrchestrator>()
 {
-	case "kubernetes":
-		builder.Services.AddScoped<IOrchestrator, KubernetesOrchestrator>();
-		break;
-	default:
-		throw new InvalidOperationException();
-}
+	["kubernetes"] = new KubernetesOrchestrator()
+});
+
+builder.Services.AddScoped<IOrchestrator>((sp) =>
+	orchestrators!.GetValueOrDefault(orchestratorVariable)
+		?? throw new InvalidOperationException(
+			$"Environment variable `ORCHESTRATOR` is invalid. Valid values are: {string.Join(", ", orchestrators.Keys.ToList())}"));
 
 // Logging
 builder.Logging.ClearProviders();
@@ -78,7 +82,9 @@ app.MapGet("/start/{container}", async (IOrchestrator orchestrator, string conta
 	.AddEndpointFilter(async (invocationContext, next) =>
 		await PreRequestMethods.CanConnectToOrchestrator(invocationContext, next))
 	.AddEndpointFilter(async (invocationContext, next) =>
-		await PreRequestMethods.RequestedContainerInEnvVar(invocationContext, next, containers));
+		await PreRequestMethods.RequestedContainerInEnvVar(invocationContext, next, containers))
+	.AddEndpointFilter(async (invocationContext, next) =>
+		await PreRequestMethods.IsValidContainer(invocationContext, next, containers));
 
 app.MapGet("/stop/{container}", async (IOrchestrator orchestrator, string container) =>
 	{
@@ -108,7 +114,9 @@ app.MapGet("/stop/{container}", async (IOrchestrator orchestrator, string contai
 	.AddEndpointFilter(async (invocationContext, next) =>
 		await PreRequestMethods.CanConnectToOrchestrator(invocationContext, next))
 	.AddEndpointFilter(async (invocationContext, next) =>
-		await PreRequestMethods.RequestedContainerInEnvVar(invocationContext, next, containers));
+		await PreRequestMethods.RequestedContainerInEnvVar(invocationContext, next, containers))
+	.AddEndpointFilter(async (invocationContext, next) =>
+		await PreRequestMethods.IsValidContainer(invocationContext, next, containers));
 
 app.MapGet("/restart/{container}", async (IOrchestrator orchestrator, string container) =>
 	{
@@ -138,7 +146,9 @@ app.MapGet("/restart/{container}", async (IOrchestrator orchestrator, string con
 	.AddEndpointFilter(async (invocationContext, next) =>
 		await PreRequestMethods.CanConnectToOrchestrator(invocationContext, next))
 	.AddEndpointFilter(async (invocationContext, next) =>
-		await PreRequestMethods.RequestedContainerInEnvVar(invocationContext, next, containers));
+		await PreRequestMethods.RequestedContainerInEnvVar(invocationContext, next, containers))
+	.AddEndpointFilter(async (invocationContext, next) =>
+		await PreRequestMethods.IsValidContainer(invocationContext, next, containers));
 
 app.MapGet("/list", async (IOrchestrator orchestrator) =>
 {
@@ -173,6 +183,8 @@ app.MapGet("/debug", async (IOrchestrator orchestrator) =>
 
 		var output = new DebugResponse
 		{
+			CurrentOrchestrator = orchestratorVariable ?? "***NOT SET***",
+			SupportedOrchestrators = orchestrators.Keys.ToList(),
 			IsOrchestratorAccessible = canConnect,
 			OrchestratorConnectionError = connectionError?.Message,
 			Containers = containers,
