@@ -60,13 +60,13 @@ public class DiscordChatbot(
 
 		return message;
 	}
-
-	[SubSlashCommand(IChatbot.DebugName, IChatbot.DebugDescription)]
-	public async Task<string> Debug()
+	
+	[SubSlashCommand(IChatbot.RestartName, IChatbot.RestartDescription)]
+	public async Task<string> Restart(string name)
 	{
 		await Context.Interaction.SendResponseAsync(InteractionCallback.Message(IChatbot.InProgressMessage));
 
-		var message = await containrBotApiService.Debug();
+		var message = await containrBotApiService.Restart(name);
 		message = message.Trim('"');
 
 		await Context.Interaction.SendFollowupMessageAsync(message);

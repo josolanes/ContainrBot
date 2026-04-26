@@ -8,5 +8,5 @@ public interface IContainrBotApiService
 
 	Task<string> ListContainers();
 
-	Task<string> Debug();
+	Task<string> Restart(string name);
 }

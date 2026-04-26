@@ -19,9 +19,9 @@ public class ContainrBotApiService(
 		return await GetRequest("stop", name);
 	}
 
-	public async Task<string> Debug()
+	public async Task<string> Restart(string name)
 	{
-		return await GetRequest("debug");
+		return await GetRequest("restart", name);
 	}
 
 	private async Task<string> GetRequest(string action, string container = "")

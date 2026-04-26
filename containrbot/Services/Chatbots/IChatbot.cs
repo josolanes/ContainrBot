@@ -14,8 +14,8 @@ public interface IChatbot
 	public const string StopName = "stop";
 	public const string StopDescription = "Stops a container";
 
-	public const string DebugName = "debug";
-	public const string DebugDescription = "Shows debug information";
+	public const string RestartName = "restart";
+	public const string RestartDescription = "Restarts a container";
 
 	public const string InProgressMessage = "Working on it...";
 
@@ -24,6 +24,6 @@ public interface IChatbot
 	Task<string> Start(string container);
 
 	Task<string> Stop(string container);
-
-	Task<string> Debug();
+	
+	Task<string> Restart(string container);
 }
