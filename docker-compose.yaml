@@ -3,7 +3,7 @@
     image: containrbot
     build:
       context: .
-      dockerfile: ContainrBot/Dockerfile
+      dockerfile: containrbot/Dockerfile
     environment:
       CHATBOT: discord
       CONTAINRBOTAPI_BASEURL: containerbotapi
@@ -13,7 +13,7 @@
     image: containrbotapi
     build:
       context: .
-      dockerfile: ContainrBotApi/Dockerfile
+      dockerfile: containrbotapi/Dockerfile
     ports:
       - "8080:8080"
     environment:
@@ -22,4 +22,4 @@
 
 secrets:
   bot_token:
-    file: ./ContainrBot/local-only/secrets/bot_token.txt
+    file: ./containrbot/local-only/secrets/bot_token.txt

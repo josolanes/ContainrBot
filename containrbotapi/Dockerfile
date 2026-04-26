@@ -6,17 +6,17 @@ FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 ARG configuration=Release
 WORKDIR /src
 COPY . .
-RUN dotnet restore "ContainrBot.Library/ContainrBot.Library.csproj"
+RUN dotnet restore "containrbot.library/ContainrBot.Library.csproj"
 COPY . .
-RUN dotnet build "ContainrBot.Library/ContainrBot.Library.csproj" -c $configuration -o /app/build
+RUN dotnet build "containrbot.library/ContainrBot.Library.csproj" -c $configuration -o /app/build
 COPY . .
-RUN dotnet restore "ContainrBotApi/ContainrBotApi.csproj"
+RUN dotnet restore "containrbotapi/ContainrBotApi.csproj"
 COPY . .
-RUN dotnet build "ContainrBotApi/ContainrBotApi.csproj" -c $configuration -o /app/build
+RUN dotnet build "containrbotapi/ContainrBotApi.csproj" -c $configuration -o /app/build
 
 FROM build AS publish
 ARG configuration=Release
-RUN dotnet publish "ContainrBotApi/ContainrBotApi.csproj" -c $configuration -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "containrbotapi/ContainrBotApi.csproj" -c $configuration -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
