@@ -2,8 +2,8 @@
   containrbot:
     image: containrbot
     build:
-      context: ContainrBot
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ContainrBot/Dockerfile
     environment:
       CHATBOT: discord
       CONTAINRBOTAPI_BASEURL: containerbotapi
@@ -12,8 +12,8 @@
   containrbotapi:
     image: containrbotapi
     build:
-      context: ContainrBotApi
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ContainrBotApi/Dockerfile
     ports:
       - "8080:8080"
     environment:
