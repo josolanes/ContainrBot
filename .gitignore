@@ -8,6 +8,7 @@ ContainrBot/obj/Debug/
 ContainrBotApi/obj/Debug/
 ContainrBot/bin/
 ContainrBotApi/bin/
+ContainrBot/local-only/
 
 # User-specific files
 *.rsuser

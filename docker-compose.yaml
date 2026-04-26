@@ -1,0 +1,25 @@
+﻿services:
+  containrbot:
+    image: containrbot
+    build:
+      context: ContainrBot
+      dockerfile: Dockerfile
+    environment:
+      CHATBOT: discord
+      CONTAINRBOTAPI_BASEURL: containerbotapi
+    secrets:
+      - bot_token
+  containrbotapi:
+    image: containrbotapi
+    build:
+      context: ContainrBotApi
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      ORCHESTRATOR: kubernetes
+      CONTAINER_LIST: "[{\"FriendlyName\": \"valheim\", \"ContainerName\": \"deploy\", \"Namespace\": \"valheim-server\"}, {\"FriendlyName\": \"cncnet\", \"ContainerName\": \"deploy\", \"Namespace\": \"cncnet-server\"}, {\"FriendlyName\": \"satisfactory\", \"ContainerName\": \"deploy\", \"Namespace\": \"satisfactory-server\"}]"
+
+secrets:
+  bot_token:
+    file: ./ContainrBot/local-only/secrets/bot_token.txt
