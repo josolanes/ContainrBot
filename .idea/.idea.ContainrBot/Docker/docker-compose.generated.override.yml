@@ -3,7 +3,7 @@ services:
   containrbot:
     build:
       context: "/home/josh/RiderProjects/ContainrBot"
-      dockerfile: "ContainrBot/Dockerfile"
+      dockerfile: "containrbot/Dockerfile"
       target: "base"
     command: []
     entrypoint:
@@ -15,14 +15,14 @@ services:
     image: "containrbot:dev"
     ports: []
     volumes:
-    - "/home/josh/RiderProjects/ContainrBot/ContainrBot:/app:rw"
+    - "/home/josh/RiderProjects/ContainrBot/containrbot:/app:rw"
     - "/home/josh/RiderProjects/ContainrBot:/src:rw"
     - "/home/josh/.nuget/packages:/root/.nuget/packages"
     working_dir: "/app"
   containrbotapi:
     build:
       context: "/home/josh/RiderProjects/ContainrBot"
-      dockerfile: "ContainrBotApi/Dockerfile"
+      dockerfile: "containrbotapi/Dockerfile"
       target: "base"
     command: []
     entrypoint:
@@ -34,7 +34,7 @@ services:
     image: "containrbotapi:dev"
     ports: []
     volumes:
-    - "/home/josh/RiderProjects/ContainrBot/ContainrBotApi:/app:rw"
+    - "/home/josh/RiderProjects/ContainrBot/containrbotapi:/app:rw"
     - "/home/josh/RiderProjects/ContainrBot:/src:rw"
     - "/home/josh/.nuget/packages:/root/.nuget/packages"
     working_dir: "/app"
