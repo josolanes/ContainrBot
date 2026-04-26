@@ -39,7 +39,7 @@ jobs:
           - image: containrbotapi
             context: ./ContainrBotApi
           - image: containrbot
-            context: ./ContainrBot
+            context: .
 
     steps:
       - name: Checkout repository

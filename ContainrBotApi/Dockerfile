@@ -5,7 +5,11 @@ EXPOSE 8080
 FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 ARG configuration=Release
 WORKDIR /src
-COPY [".", "ContainrBotApi/"]
+COPY . .
+RUN dotnet restore "ContainrBot.Library/ContainrBot.Library.csproj"
+COPY . .
+RUN dotnet build "ContainrBot.Library/ContainrBot.Library.csproj" -c $configuration -o /app/build
+COPY . .
 RUN dotnet restore "ContainrBotApi/ContainrBotApi.csproj"
 COPY . .
 RUN dotnet build "ContainrBotApi/ContainrBotApi.csproj" -c $configuration -o /app/build
