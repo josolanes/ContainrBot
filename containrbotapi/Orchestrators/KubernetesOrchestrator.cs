@@ -88,25 +88,17 @@ public class KubernetesOrchestrator : IOrchestrator
 
 	public async Task Restart(Container container)
 	{
-		var patch = new JsonPatchDocument<V1Deployment>
+		var deployment = await Client.ReadNamespacedDeploymentAsync(container.ContainerName, container.Namespace);
+		var restart = new Dictionary<string, string>(deployment.Spec.Template.Metadata.Annotations)
 		{
-			ContractResolver = new DefaultContractResolver
-			{
-				NamingStrategy = new CamelCaseNamingStrategy()
-			}
+			["kubectl.kubernetes.io/restartedAt"] = DateTime.UtcNow.ToString("s")
 		};
 
-		patch.Replace(e => e.Spec.Template.Metadata.Annotations, new Dictionary<string, string>
-		{
-			["kubectl.kubernetes.io/restartedAt"] = DateTime.UtcNow.ToString("s") + "Z"
-		});
-
-		var jsonPatchString = JsonConvert.SerializeObject(patch);
-
-		var v1Patch = new V1Patch(jsonPatchString, V1Patch.PatchType.StrategicMergePatch);
+		var patch = new JsonPatchDocument<V1Deployment>();
+		patch.Replace(e => e.Spec.Template.Metadata.Annotations, restart);
 
 		await Client.AppsV1.PatchNamespacedDeploymentScaleAsync(
-			v1Patch,
+			new V1Patch(deployment, V1Patch.PatchType.JsonPatch),
 			container.ContainerName,
 			container.Namespace);
 	}
