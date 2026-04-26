@@ -89,9 +89,9 @@ public class KubernetesOrchestrator : IOrchestrator
 	public async Task Restart(Container container)
 	{
 		var deployment = await Client.ReadNamespacedDeploymentAsync(container.ContainerName, container.Namespace);
-		var restart = new Dictionary<string, string>
+		var restart = new Dictionary<string, string>(deployment.Spec.Template.Metadata.Annotations)
 		{
-			["kubectl.kubernetes.io/restartedAt"] = DateTime.UtcNow.ToString("s")
+			["kubectl.kubernetes.io/restartedAt"] = DateTime.UtcNow.ToString("s") + "Z"
 		};
 
 		var patch = new JsonPatchDocument<V1Deployment>();
