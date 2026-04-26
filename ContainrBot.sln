@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ContainrBotApi", "ContainrBotApi\ContainrBotApi.csproj", "{27CD650A-4CF1-444A-B9F6-0BBE5C57BD0F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ContainrBotApi", "containrbotapi\ContainrBotApi.csproj", "{27CD650A-4CF1-444A-B9F6-0BBE5C57BD0F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ContainrBot", "ContainrBot\ContainrBot.csproj", "{CEBCB9EA-B1F4-451A-907C-3B6F9EC56C40}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ContainrBot", "containrbot\ContainrBot.csproj", "{CEBCB9EA-B1F4-451A-907C-3B6F9EC56C40}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Solution Items", "_Solution Items", "{1AA1D02F-7116-5B38-8DE8-872F7AF62B98}"
 	ProjectSection(SolutionItems) = preProject
@@ -14,7 +14,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Solution Items", "_Solutio
 		.github\workflows\docker-publish.yml = .github\workflows\docker-publish.yml
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ContainrBot.Library", "ContainrBot.Library\ContainrBot.Library.csproj", "{B3F34B2B-9344-4A2B-A3E9-43ABC9BA4D71}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ContainrBot.Library", "containrbot.library\ContainrBot.Library.csproj", "{B3F34B2B-9344-4A2B-A3E9-43ABC9BA4D71}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{39D08399-0E4D-4C0A-84BA-23474EE229E0}"
 	ProjectSection(SolutionItems) = preProject
