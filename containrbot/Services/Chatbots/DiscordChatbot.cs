@@ -25,9 +25,9 @@ public class DiscordChatbot(
 
 			return successMessage;
 		}
-		catch
+		catch (Exception ex)
 		{
-			var failedMessage = $"Unable to retrieve the containers list: {output}";
+			var failedMessage = $"Unable to retrieve the containers list: {ex.Message}";
 
 			await Context.Interaction.SendFollowupMessageAsync(failedMessage);
 
