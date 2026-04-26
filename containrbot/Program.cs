@@ -9,7 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Fixed services
 builder.Services.AddHttpClient();
-builder.Services.AddSingleton<IContainrBotApiService, ContainrBotApiService>();
+builder.Services.AddScoped<IContainrBotApiService, ContainrBotApiService>();
 
 // Get required environment variables (will error if not set)
 var chatbot = Helpers.GetRequiredEnvironmentVariable(builder, "CHATBOT");
@@ -20,7 +20,7 @@ var token = GetBotToken();
 switch (chatbot.ToLowerInvariant())
 {
 	case "discord":
-		builder.Services.AddSingleton<IChatbot, DiscordChatbot>();
+		builder.Services.AddScoped<IChatbot, DiscordChatbot>();
 
 		builder.Services
 			.AddDiscordGateway(options => { options.Token = token; })
