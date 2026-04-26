@@ -97,8 +97,10 @@ public class KubernetesOrchestrator : IOrchestrator
 		var patch = new JsonPatchDocument<V1Deployment>();
 		patch.Replace(e => e.Spec.Template.Metadata.Annotations, restart);
 
+		var jsonPatchString = JsonConvert.SerializeObject(patch);
+
 		await Client.AppsV1.PatchNamespacedDeploymentScaleAsync(
-			new V1Patch(deployment, V1Patch.PatchType.JsonPatch),
+			new V1Patch(jsonPatchString, V1Patch.PatchType.JsonPatch),
 			container.ContainerName,
 			container.Namespace);
 	}
