@@ -98,12 +98,12 @@ public class KubernetesOrchestrator : IOrchestrator
 
 		patch.Replace(e => e.Spec.Template.Metadata.Annotations, new Dictionary<string, string>
 		{
-			["kubectl.kubernetes.io/restartedAt"] = DateTime.UtcNow.ToString("s")
+			["kubectl.kubernetes.io/restartedAt"] = DateTime.UtcNow.ToString("s") + "Z"
 		});
 
 		var jsonPatchString = JsonConvert.SerializeObject(patch);
 
-		var v1Patch = new V1Patch(jsonPatchString, V1Patch.PatchType.JsonPatch);
+		var v1Patch = new V1Patch(jsonPatchString, V1Patch.PatchType.StrategicMergePatch);
 
 		await Client.AppsV1.PatchNamespacedDeploymentScaleAsync(
 			v1Patch,
