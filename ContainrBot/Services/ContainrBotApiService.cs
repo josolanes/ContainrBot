@@ -1,50 +1,43 @@
-using ContainrBot.Services;
-
 namespace ContainrBot.Services;
 
 public class ContainrBotApiService(
-    IConfiguration configuration,
-    HttpClient httpClient) : IContainrBotApiService
+	IConfiguration configuration,
+	HttpClient httpClient) : IContainrBotApiService
 {
-    public string ListContainers(out bool success)
-    {
-        var baseUrl = configuration.GetValue<string>("CONTAINRBOTAPI_BASEURL");
-        var url = $"{baseUrl}/list";
+	public async Task<string> ListContainers()
+	{
+		return await GetRequest("list");
+	}
 
-        httpClient.Timeout = TimeSpan.FromSeconds(60);
+	public async Task<string> StartContainers(string name)
+	{
+		return await GetRequest("start", name);
+	}
 
-        HttpResponseMessage response = httpClient.GetAsync(url).Result;
+	public async Task<string> StopContainers(string name)
+	{
+		return await GetRequest("stop", name);
+	}
 
-        success = response.IsSuccessStatusCode;
+	public async Task<string> Debug()
+	{
+		return await GetRequest("debug");
+	}
 
-        return response.Content.ReadAsStringAsync().Result;
-    }
+	private async Task<string> GetRequest(string action, string container = "")
+	{
+		var baseUrl = configuration.GetValue<string>("CONTAINRBOTAPI_BASEURL");
+		var url = $"{baseUrl}/{action}";
 
-    public string StartContainers(string name, out bool success)
-    {
-        var baseUrl = configuration.GetValue<string>("CONTAINRBOTAPI_BASEURL");
-        var url = $"{baseUrl}/start/{name}";
+		if (!string.IsNullOrEmpty(container))
+		{
+			url = $"{url}/{container}";
+		}
 
-        httpClient.Timeout = TimeSpan.FromSeconds(60);
+		httpClient.Timeout = TimeSpan.FromSeconds(60);
 
-        HttpResponseMessage response = httpClient.GetAsync(url).Result;
+		var response = await httpClient.GetAsync(url);
 
-        success = response.IsSuccessStatusCode;
-
-        return response.Content.ReadAsStringAsync().Result;
-    }
-
-    public string StopContainers(string name, out bool success)
-    {
-        var baseUrl = configuration.GetValue<string>("CONTAINRBOTAPI_BASEURL");
-        var url = $"{baseUrl}/stop/{name}";
-
-        httpClient.Timeout = TimeSpan.FromSeconds(60);
-
-        HttpResponseMessage response = httpClient.GetAsync(url).Result;
-
-        success = response.IsSuccessStatusCode;
-
-        return response.Content.ReadAsStringAsync().Result;
-    }
+		return await response.Content.ReadAsStringAsync();
+	}
 }

@@ -1,22 +1,38 @@
-using Microsoft.AspNetCore.JsonPatch;
-using System.Text.Json;
-using k8s;
-using k8s.Models;
-using Newtonsoft.Json.Serialization;
+using ContainrBot.Library;
+using ContainrBotApi;
+using ContainrBotApi.Models;
+using ContainrBotApi.Models.Internal;
+using ContainrBotApi.Orchestrators;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+var orchestratorVariable = Helpers.GetRequiredEnvironmentVariable(builder, "ORCHESTRATOR");
+var containersRaw = Helpers.GetRequiredEnvironmentVariable(builder, "CONTAINER_LIST");
+var containers = JsonSerializer.Deserialize<List<Container>>(containersRaw) ?? [];
 
+builder.Services.AddValidation();
+
+// Expose API endpoints with OpenApi
+builder.Services.AddOpenApi();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddOpenApiDocument(config =>
 {
-    config.DocumentName = "ContainrBotApi";
-    config.Title = "ContainrBotApi";
-    config.Version = "v1";
+	config.DocumentName = "ContainrBotApi";
+	config.Title = "ContainrBotApi";
+	config.Version = "v1";
 });
 
+switch (orchestratorVariable.ToLowerInvariant())
+{
+	case "kubernetes":
+		builder.Services.AddSingleton<IOrchestrator, KubernetesOrchestrator>();
+		break;
+	default:
+		throw new InvalidOperationException();
+}
+
+// Logging
 builder.Logging.ClearProviders();
 builder.Logging.AddConfiguration(builder.Configuration.GetSection("Logging"));
 builder.Logging.AddConsole();
@@ -24,154 +40,151 @@ builder.Logging.AddEventSourceLogger();
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
+app.UseOpenApi();
+app.UseSwaggerUi(config =>
 {
-    app.UseOpenApi();
-    app.UseSwaggerUi(config =>
-    {
-        config.DocumentTitle = "TodoAPI";
-        config.Path = "/swagger";
-        config.DocumentPath = "/swagger/{documentName}/swagger.json";
-        config.DocExpansion = "list";
-    });
-}
+	config.DocumentTitle = "ContainrBotApi";
+	config.Path = "/swagger";
+	config.DocExpansion = "list";
+});
 
 app.UseDeveloperExceptionPage();
 
-app.Logger.LogInformation("Logging is working");
+app.MapGet("/start/{container}", async (IOrchestrator orchestrator, string container) =>
+	{
+		try
+		{
+			if (!containers.Exists(e => e.FriendlyName == container))
+			{
+				return Results.BadRequest($"The container '{container}' is not a valid container.");
+			}
 
-string containersRaw = builder.Configuration.GetValue<string>("CONTAINER_LIST") ?? throw new InvalidOperationException("Environment variable not set: CONTAINER_LIST");
-List<Container> containers = JsonSerializer.Deserialize<List<Container>>(containersRaw) ?? [];
+			var currentContainer = containers.FirstOrDefault(g => g.FriendlyName == container);
 
-app.Logger.LogInformation("Retrieved CONTAINER_LIST");
+			if (!await orchestrator.Exists(currentContainer))
+			{
+				return Results.BadRequest($"'{container}' doesn't seem to be deployed.");
+			}
 
-var k8sConfig = KubernetesClientConfiguration.InClusterConfig();
-var client =  new Kubernetes(k8sConfig);
+			await orchestrator.Start(currentContainer);
 
-app.MapGet("/", () => "Hello World!");
+			return Results.Ok($"Successfully started {container}!");
+		}
+		catch (Exception ex)
+		{
+			return Results.InternalServerError(ex.Message);
+		}
+	})
+	.AddEndpointFilter(async (invocationContext, next) =>
+		await PreRequestMethods.CanConnectToOrchestrator(invocationContext, next))
+	.AddEndpointFilter(async (invocationContext, next) =>
+		await PreRequestMethods.RequestedContainerInEnvVar(invocationContext, next, containers));
 
-app.MapGet("/start/{container}", (string container) =>
+app.MapGet("/stop/{container}", async (IOrchestrator orchestrator, string container) =>
+	{
+		try
+		{
+			if (!containers.Exists(e => e.FriendlyName == container))
+			{
+				return Results.BadRequest($"The container '{container}' is not a valid container.");
+			}
+
+			var currentContainer = containers.FirstOrDefault(g => g.FriendlyName == container);
+
+			if (!await orchestrator.Exists(currentContainer))
+			{
+				return Results.BadRequest($"'{container}' doesn't seem to be deployed.");
+			}
+
+			await orchestrator.Stop(currentContainer);
+
+			return Results.Ok($"Successfully stopped {container}!");
+		}
+		catch (Exception ex)
+		{
+			return Results.InternalServerError(ex.Message);
+		}
+	})
+	.AddEndpointFilter(async (invocationContext, next) =>
+		await PreRequestMethods.CanConnectToOrchestrator(invocationContext, next))
+	.AddEndpointFilter(async (invocationContext, next) =>
+		await PreRequestMethods.RequestedContainerInEnvVar(invocationContext, next, containers));
+
+app.MapGet("/restart/{container}", async (IOrchestrator orchestrator, string container) =>
+	{
+		try
+		{
+			if (!containers.Exists(e => e.FriendlyName == container))
+			{
+				return Results.BadRequest($"The container '{container}' is not a valid container.");
+			}
+
+			var currentContainer = containers.FirstOrDefault(g => g.FriendlyName == container);
+
+			if (!await orchestrator.Exists(currentContainer))
+			{
+				return Results.BadRequest($"'{container}' doesn't seem to be deployed.");
+			}
+
+			await orchestrator.Restart(currentContainer);
+
+			return Results.Ok($"Successfully restarted {container}!");
+		}
+		catch (Exception ex)
+		{
+			return Results.InternalServerError(ex.Message);
+		}
+	})
+	.AddEndpointFilter(async (invocationContext, next) =>
+		await PreRequestMethods.CanConnectToOrchestrator(invocationContext, next))
+	.AddEndpointFilter(async (invocationContext, next) =>
+		await PreRequestMethods.RequestedContainerInEnvVar(invocationContext, next, containers));
+
+app.MapGet("/list", async (IOrchestrator orchestrator) =>
 {
-    try
-    {
-        if (!containers.Exists(e => e.FriendlyName == container))
-        {
-            return Results.BadRequest($"The container '{container}' is not a valid container.");
-        }
+	try
+	{
+		var output = await orchestrator.List(containers);
 
-        var currentContainer = containers.FirstOrDefault(g => g.FriendlyName == container);
+		return Results.Ok(output);
+	}
+	catch (Exception ex)
+	{
+		return Results.InternalServerError(ex);
+	}
+}).AddEndpointFilter(async (invocationContext, next) =>
+	await PreRequestMethods.CanConnectToOrchestrator(invocationContext, next));
 
-        var deployments = client.ListNamespacedDeployment(currentContainer.Namespace);
-
-        if (deployments?.Items.Count == 0)
-        {
-            return Results.BadRequest($"'{container}' doesn't seem to be deployed.");
-        }
-
-        var patch = new JsonPatchDocument<V1Scale>();
-        patch.ContractResolver = new DefaultContractResolver
-        {
-            NamingStrategy = new CamelCaseNamingStrategy()
-        };
-        patch.Replace(e => e.Spec.Replicas, 1);
-        
-        var jsonPatchString = Newtonsoft.Json.JsonConvert.SerializeObject(patch);
-
-        var v1Patch = new V1Patch(jsonPatchString, V1Patch.PatchType.JsonPatch);
-
-        client.AppsV1.PatchNamespacedDeploymentScale(
-            v1Patch,
-            currentContainer.ContainerName,
-            currentContainer.Namespace);
-
-        return Results.Ok($"Successfully started {container}!");
-    }
-    catch (Exception ex)
-    {
-        return Results.InternalServerError(ex.Message);
-    }
-});
-
-app.MapGet("/stop/{container}", (string container) =>
+app.MapGet("/debug", async (IOrchestrator orchestrator) =>
 {
-    try
-    {
-        if (!containers.Exists(e => e.FriendlyName == container))
-        {
-            return Results.BadRequest($"The container '{container}' is not a valid container.");
-        }
-        
-        var currentContainer = containers.FirstOrDefault(g => g.FriendlyName == container);
+	try
+	{
+		var canConnect = false;
+		Exception? connectionError = null;
 
-        var deployments = client.ListNamespacedDeployment(currentContainer.Namespace);
+		try
+		{
+			canConnect = await orchestrator.CanConnect();
+		}
+		catch (Exception ex)
+		{
+			connectionError = ex;
+		}
 
-        if (deployments?.Items.Count == 0)
-        {
-            return Results.BadRequest($"'{container}' doesn't seem to be deployed.");
-        }
-        
-        var patch = new JsonPatchDocument<V1Scale>();
-        patch.ContractResolver = new DefaultContractResolver
-        {
-            NamingStrategy = new CamelCaseNamingStrategy()
-        };
-        patch.Replace(e => e.Spec.Replicas, 0);
-        
-        var jsonPatchString = Newtonsoft.Json.JsonConvert.SerializeObject(patch);
+		var output = new DebugResponse
+		{
+			IsOrchestratorAccessible = canConnect,
+			OrchestratorConnectionError = connectionError?.Message,
+			Containers = containers,
+			ContainersStatus = await orchestrator.List(containers)
+		};
 
-        var v1Patch = new V1Patch(jsonPatchString, V1Patch.PatchType.JsonPatch);
-
-        client.AppsV1.PatchNamespacedDeploymentScale(
-            v1Patch,
-            currentContainer.ContainerName,
-            currentContainer.Namespace);
-
-        return Results.Ok($"Successfully stopped {container}!");
-    }
-    catch (Exception ex)
-    {
-        return Results.InternalServerError(ex.Message);
-    }
+		return Results.Ok(output);
+	}
+	catch (Exception ex)
+	{
+		return Results.InternalServerError(ex);
+	}
 });
-
-app.MapGet("/list", () =>
-{
-    try
-    {
-        List<string> output = [];
-        
-        for (int i = 0; i < containers.Count(); i++)
-        {
-            try
-            {
-                var scale = client.ReadNamespacedDeploymentScale(containers[i].ContainerName, containers[i].Namespace);
-                var isRunning = scale.Spec.Replicas is > 0;
-                
-                output.Add($"{containers[i].FriendlyName} is {(isRunning ? "running" : "not running")}");
-            }
-            catch
-            {
-                output.Add($"{containers[i].FriendlyName} is not deployed");
-            }
-        }
-
-        return Results.Ok(output);
-    }
-    catch (Exception ex)
-    {
-        return Results.InternalServerError(ex);
-    }
-});
-
-app.Logger.LogInformation("Mapped endpoints");
 
 app.Run();
-
-struct Container
-{
-    public string FriendlyName { get; set; }
-
-    public string ContainerName { get; set; }
-    
-    public string Namespace { get; set; }
-}
