@@ -26,7 +26,7 @@ builder.Services.AddOpenApiDocument(config =>
 switch (orchestratorVariable.ToLowerInvariant())
 {
 	case "kubernetes":
-		builder.Services.AddSingleton<IOrchestrator, KubernetesOrchestrator>();
+		builder.Services.AddScoped<IOrchestrator, KubernetesOrchestrator>();
 		break;
 	default:
 		throw new InvalidOperationException();
