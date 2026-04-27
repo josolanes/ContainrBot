@@ -13,6 +13,9 @@ var containersRaw = Helpers.GetRequiredEnvironmentVariable(builder, "CONTAINER_L
 var containers = JsonSerializer.Deserialize<List<Container>>(containersRaw) ?? [];
 
 builder.Services.AddValidation();
+builder.Services.ConfigureHttpJsonOptions(options => {
+	options.SerializerOptions.WriteIndented = true;
+});
 
 // Expose API endpoints with OpenApi
 builder.Services.AddOpenApi();
