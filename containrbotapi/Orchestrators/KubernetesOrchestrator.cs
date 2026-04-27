@@ -23,7 +23,7 @@ public class KubernetesOrchestrator : IOrchestrator
 	private static readonly KubernetesClientConfiguration K8SConfig = KubernetesClientConfiguration.InClusterConfig();
 	private static readonly Kubernetes Client = new(K8SConfig);
 
-	public string Name { get; } = "Kubernetes";
+	public string Name => "Kubernetes";
 
 	public List<string> RequiredContainerProperties { get; } =
 	[
@@ -139,6 +139,6 @@ public class KubernetesOrchestrator : IOrchestrator
 	{
 		return Task.FromResult(!string.IsNullOrEmpty(container.ContainerName)
 							   && !string.IsNullOrEmpty(container.FriendlyName)
-							   && !string.IsNullOrEmpty(container.ContainerName));
+							   && !string.IsNullOrEmpty(container.Namespace));
 	}
 }

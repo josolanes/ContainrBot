@@ -32,7 +32,8 @@ builder.Services.AddOpenApiDocument(config =>
 // Custom services
 var orchestrators = new ReadOnlyDictionary<string, IOrchestrator>(new Dictionary<string, IOrchestrator>
 {
-	["kubernetes"] = new KubernetesOrchestrator()
+	["kubernetes"] = new KubernetesOrchestrator(),
+	["docker"] = new DockerOrchestrator()
 });
 
 builder.Services.AddScoped<IOrchestrator>(sp =>

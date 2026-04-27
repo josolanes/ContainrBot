@@ -16,9 +16,15 @@
       dockerfile: containrbotapi/Dockerfile
     ports:
       - "8080:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
     environment:
-      ORCHESTRATOR: kubernetes
-      CONTAINER_LIST: "[{\"FriendlyName\": \"valheim\", \"ContainerName\": \"deploy\", \"Namespace\": \"valheim-server\"}, {\"FriendlyName\": \"cncnet\", \"ContainerName\": \"deploy\", \"Namespace\": \"cncnet-server\"}, {\"FriendlyName\": \"satisfactory\", \"ContainerName\": \"deploy\", \"Namespace\": \"satisfactory-server\"}]"
+      ORCHESTRATOR: docker
+      CONTAINER_LIST: "[{\"FriendlyName\": \"hello\", \"ContainerName\": \"hello-world\", \"Namespace\": \"\"}]"
+      
+  hello-world:
+    container_name: hello-world
+    image: nginx
 
 secrets:
   bot-token:

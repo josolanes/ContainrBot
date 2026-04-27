@@ -14,13 +14,11 @@ public class DiscordChatbot(
 	{
 		await Context.Interaction.SendResponseAsync(InteractionCallback.Message(IChatbot.InProgressMessage));
 
-		var output = "";
-
 		try
 		{
-			output = await containrBotApiService.ListContainers();
+			var containers = await containrBotApiService.ListContainers();
 
-			var successMessage = string.Join("\n", JsonSerializer.Deserialize<List<string>>(output) ?? []);
+			var successMessage = string.Join("\n", JsonSerializer.Deserialize<List<string>>(containers) ?? []);
 
 			await Context.Interaction.SendFollowupMessageAsync(successMessage);
 
