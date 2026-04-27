@@ -7,11 +7,16 @@
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
         <LangVersion>default</LangVersion>
         <RootNamespace>ContainrBot</RootNamespace>
+        <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
         <DebugType>portable</DebugType> <!-- Or 'full' -->
     </PropertyGroup>
+
+    <Target Name="EditorConfig Validation" AfterTargets="Build">
+        <Exec Command="dotnet format --verify-no-changes"/>
+    </Target>
 
     <ItemGroup>
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.7"/>

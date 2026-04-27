@@ -2,11 +2,11 @@ namespace ContainrBot.Services;
 
 public interface IContainrBotApiService
 {
-	Task<string> StartContainers(string name);
+  Task<string> StartContainers(string name);
 
-	Task<string> StopContainers(string name);
+  Task<string> StopContainers(string name);
 
-	Task<string> ListContainers();
+  Task<string> ListContainers();
 
-	Task<string> Restart(string name);
+  Task<string> Restart(string name);
 }
