@@ -1,7 +1,6 @@
 namespace ContainrBot.Services;
 
 public class ContainrBotApiService(
-	IConfiguration configuration,
 	HttpClient httpClient) : IContainrBotApiService
 {
 	public async Task<string> ListContainers()
