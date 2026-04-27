@@ -7,9 +7,9 @@ An API exposing docker and kubernetes deploys and a related chat bot to manipula
 ### Environment Variables
 
 * CONTAINER_LIST: A list of container data objects with these properties:
-    * FriendlyName: The name used when interacting with the chat bot
-    * ContainerName: The container name for the deployable
-    * Namespace: The namespace for the deployable (kubernetes only)
+	* FriendlyName: The name used when interacting with the chat bot
+	* ContainerName: The container name for the deployable
+	* Namespace: The namespace for the deployable (kubernetes only)
 
 Examples:
 

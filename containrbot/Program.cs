@@ -1,6 +1,7 @@
 using ContainrBot.Library;
 using ContainrBot.Services;
 using ContainrBot.Services.Chatbots;
+
 using NetCord.Hosting.Gateway;
 using NetCord.Hosting.Services;
 using NetCord.Hosting.Services.ApplicationCommands;
@@ -18,16 +19,16 @@ builder.Services.AddHttpClient<IContainrBotApiService, ContainrBotApiService>("c
 // Conditional services
 switch (chatbot.ToLowerInvariant())
 {
-  case "discord":
-	builder.Services.AddScoped<IChatbot, DiscordChatbot>();
+	case "discord":
+		builder.Services.AddScoped<IChatbot, DiscordChatbot>();
 
-	builder.Services
-		.AddDiscordGateway(options => { options.Token = token; })
-		.AddGatewayHandlers(typeof(Program).Assembly)
-		.AddApplicationCommands();
-	break;
-  default:
-	throw new InvalidOperationException();
+		builder.Services
+			.AddDiscordGateway(options => { options.Token = token; })
+			.AddGatewayHandlers(typeof(Program).Assembly)
+			.AddApplicationCommands();
+		break;
+	default:
+		throw new InvalidOperationException();
 }
 
 // Logging
@@ -42,35 +43,35 @@ var host = builder.Build();
 // Custom services
 switch (chatbot.ToLowerInvariant())
 {
-  case "discord":
-	host.AddModules(typeof(Program).Assembly);
-	break;
-  default:
-	throw new InvalidOperationException();
+	case "discord":
+		host.AddModules(typeof(Program).Assembly);
+		break;
+	default:
+		throw new InvalidOperationException();
 }
 
 // Start application
 await host.RunAsync();
 
 // private methods
-string GetBotToken()
+static string GetBotToken()
 {
-  const string botTokenSecretPathDocker = "/run/secrets/bot-token";
-  const string botTokenSecretPathKubernetes = "/run/secrets/bot-token/bot-token";
+	const string botTokenSecretPathDocker = "/run/secrets/bot-token";
+	const string botTokenSecretPathKubernetes = "/run/secrets/bot-token/bot-token";
 
-  var botToken = "";
-  if (File.Exists(botTokenSecretPathDocker))
-  {
-	botToken = File.ReadAllText(botTokenSecretPathDocker).Trim();
-  }
-  else if (File.Exists(botTokenSecretPathKubernetes))
-  {
-	botToken = File.ReadAllText(botTokenSecretPathKubernetes).Trim();
-  }
-  else
-  {
-	throw new InvalidOperationException("Secret file not set: bot-token");
-  }
+	var botToken = "";
+	if (File.Exists(botTokenSecretPathDocker))
+	{
+		botToken = File.ReadAllText(botTokenSecretPathDocker).Trim();
+	}
+	else if (File.Exists(botTokenSecretPathKubernetes))
+	{
+		botToken = File.ReadAllText(botTokenSecretPathKubernetes).Trim();
+	}
+	else
+	{
+		throw new InvalidOperationException("Secret file not set: bot-token");
+	}
 
-  return botToken;
+	return botToken;
 }

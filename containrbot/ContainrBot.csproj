@@ -1,38 +1,38 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
-    <PropertyGroup>
-        <TargetFramework>net10.0</TargetFramework>
-        <Nullable>enable</Nullable>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-        <LangVersion>default</LangVersion>
-        <RootNamespace>ContainrBot</RootNamespace>
-        <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
-    </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net10.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+		<LangVersion>default</LangVersion>
+		<RootNamespace>ContainrBot</RootNamespace>
+		<EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+	</PropertyGroup>
 
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-        <DebugType>portable</DebugType> <!-- Or 'full' -->
-    </PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+		<DebugType>portable</DebugType> <!-- Or 'full' -->
+	</PropertyGroup>
 
-    <Target Name="EditorConfig Validation" AfterTargets="Build">
-        <Exec Command="dotnet format --verify-no-changes"/>
-    </Target>
+	<Target Name="EditorConfig Validation" AfterTargets="Build">
+		<Exec Command="dotnet format --verify-no-changes"/>
+	</Target>
 
-    <ItemGroup>
-        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.7"/>
-        <PackageReference Include="NetCord" Version="1.0.0-alpha.485"/>
-        <PackageReference Include="NetCord.Hosting" Version="1.0.0-alpha.485"/>
-        <PackageReference Include="NetCord.Hosting.AspNetCore" Version="1.0.0-alpha.485"/>
-        <PackageReference Include="NetCord.Hosting.Services" Version="1.0.0-alpha.485"/>
-        <PackageReference Include="NetCord.Services" Version="1.0.0-alpha.485"/>
-    </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.7"/>
+		<PackageReference Include="NetCord" Version="1.0.0-alpha.485"/>
+		<PackageReference Include="NetCord.Hosting" Version="1.0.0-alpha.485"/>
+		<PackageReference Include="NetCord.Hosting.AspNetCore" Version="1.0.0-alpha.485"/>
+		<PackageReference Include="NetCord.Hosting.Services" Version="1.0.0-alpha.485"/>
+		<PackageReference Include="NetCord.Services" Version="1.0.0-alpha.485"/>
+	</ItemGroup>
 
-    <ItemGroup>
-        <Folder Include="Properties/"/>
-    </ItemGroup>
+	<ItemGroup>
+		<Folder Include="Properties/"/>
+	</ItemGroup>
 
-    <ItemGroup>
-        <ProjectReference Include="..\containrbot.library\ContainrBot.Library.csproj"/>
-    </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\containrbot.library\ContainrBot.Library.csproj"/>
+	</ItemGroup>
 
 </Project>

@@ -1,9 +1,12 @@
 using System.Collections.ObjectModel;
+
 using ContainrBot.Library;
+
 using ContainrBotApi;
 using ContainrBotApi.Models;
 using ContainrBotApi.Models.Internal;
 using ContainrBotApi.Orchestrators;
+
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,26 +16,23 @@ var containersRaw = Helpers.GetRequiredEnvironmentVariable(builder, "CONTAINER_L
 var containers = JsonSerializer.Deserialize<List<Container>>(containersRaw) ?? [];
 
 builder.Services.AddValidation();
-builder.Services.ConfigureHttpJsonOptions(options =>
-{
-  options.SerializerOptions.WriteIndented = true;
-});
+builder.Services.ConfigureHttpJsonOptions(options => { options.SerializerOptions.WriteIndented = true; });
 
 // Expose API endpoints with OpenApi
 builder.Services.AddOpenApi();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddOpenApiDocument(config =>
 {
-  config.DocumentName = "ContainrBotApi";
-  config.Title = "ContainrBotApi";
-  config.Version = "v1";
+	config.DocumentName = "ContainrBotApi";
+	config.Title = "ContainrBotApi";
+	config.Version = "v1";
 });
 
 
 // Custom services
 var orchestrators = new ReadOnlyDictionary<string, IOrchestrator>(new Dictionary<string, IOrchestrator>
 {
-  ["kubernetes"] = new KubernetesOrchestrator()
+	["kubernetes"] = new KubernetesOrchestrator()
 });
 
 builder.Services.AddScoped<IOrchestrator>(sp =>
@@ -51,42 +51,42 @@ var app = builder.Build();
 app.UseOpenApi();
 app.UseSwaggerUi(config =>
 {
-  config.DocumentTitle = "ContainrBotApi";
-  config.Path = "/swagger";
-  config.DocExpansion = "list";
+	config.DocumentTitle = "ContainrBotApi";
+	config.Path = "/swagger";
+	config.DocExpansion = "list";
 });
 
 app.UseDeveloperExceptionPage();
 
 app.MapGet("/health", () => Results.Ok(new
 {
-  status = "pass"
+	status = "pass"
 }));
 
 app.MapGet("/start/{container}", async (IOrchestrator orchestrator, string container) =>
 	{
-	  try
-	  {
-		if (!containers.Exists(e => e.FriendlyName == container))
+		try
 		{
-		  return Results.BadRequest($"The container '{container}' is not a valid container.");
+			if (!containers.Exists(e => e.FriendlyName == container))
+			{
+				return Results.BadRequest($"The container '{container}' is not a valid container.");
+			}
+
+			var currentContainer = containers.FirstOrDefault(g => g.FriendlyName == container);
+
+			if (!await orchestrator.Exists(currentContainer))
+			{
+				return Results.BadRequest($"'{container}' doesn't seem to be deployed.");
+			}
+
+			await orchestrator.Start(currentContainer);
+
+			return Results.Ok($"Successfully started {container}!");
 		}
-
-		var currentContainer = containers.FirstOrDefault(g => g.FriendlyName == container);
-
-		if (!await orchestrator.Exists(currentContainer))
+		catch (Exception ex)
 		{
-		  return Results.BadRequest($"'{container}' doesn't seem to be deployed.");
+			return Results.InternalServerError(ex.Message);
 		}
-
-		await orchestrator.Start(currentContainer);
-
-		return Results.Ok($"Successfully started {container}!");
-	  }
-	  catch (Exception ex)
-	  {
-		return Results.InternalServerError(ex.Message);
-	  }
 	})
 	.AddEndpointFilter(async (invocationContext, next) =>
 		await PreRequestMethods.CanConnectToOrchestrator(invocationContext, next))
@@ -97,28 +97,28 @@ app.MapGet("/start/{container}", async (IOrchestrator orchestrator, string conta
 
 app.MapGet("/stop/{container}", async (IOrchestrator orchestrator, string container) =>
 	{
-	  try
-	  {
-		if (!containers.Exists(e => e.FriendlyName == container))
+		try
 		{
-		  return Results.BadRequest($"The container '{container}' is not a valid container.");
+			if (!containers.Exists(e => e.FriendlyName == container))
+			{
+				return Results.BadRequest($"The container '{container}' is not a valid container.");
+			}
+
+			var currentContainer = containers.FirstOrDefault(g => g.FriendlyName == container);
+
+			if (!await orchestrator.Exists(currentContainer))
+			{
+				return Results.BadRequest($"'{container}' doesn't seem to be deployed.");
+			}
+
+			await orchestrator.Stop(currentContainer);
+
+			return Results.Ok($"Successfully stopped {container}!");
 		}
-
-		var currentContainer = containers.FirstOrDefault(g => g.FriendlyName == container);
-
-		if (!await orchestrator.Exists(currentContainer))
+		catch (Exception ex)
 		{
-		  return Results.BadRequest($"'{container}' doesn't seem to be deployed.");
+			return Results.InternalServerError(ex.Message);
 		}
-
-		await orchestrator.Stop(currentContainer);
-
-		return Results.Ok($"Successfully stopped {container}!");
-	  }
-	  catch (Exception ex)
-	  {
-		return Results.InternalServerError(ex.Message);
-	  }
 	})
 	.AddEndpointFilter(async (invocationContext, next) =>
 		await PreRequestMethods.CanConnectToOrchestrator(invocationContext, next))
@@ -129,28 +129,28 @@ app.MapGet("/stop/{container}", async (IOrchestrator orchestrator, string contai
 
 app.MapGet("/restart/{container}", async (IOrchestrator orchestrator, string container) =>
 	{
-	  try
-	  {
-		if (!containers.Exists(e => e.FriendlyName == container))
+		try
 		{
-		  return Results.BadRequest($"The container '{container}' is not a valid container.");
+			if (!containers.Exists(e => e.FriendlyName == container))
+			{
+				return Results.BadRequest($"The container '{container}' is not a valid container.");
+			}
+
+			var currentContainer = containers.FirstOrDefault(g => g.FriendlyName == container);
+
+			if (!await orchestrator.Exists(currentContainer))
+			{
+				return Results.BadRequest($"'{container}' doesn't seem to be deployed.");
+			}
+
+			await orchestrator.Restart(currentContainer);
+
+			return Results.Ok($"Successfully restarted {container}!");
 		}
-
-		var currentContainer = containers.FirstOrDefault(g => g.FriendlyName == container);
-
-		if (!await orchestrator.Exists(currentContainer))
+		catch (Exception ex)
 		{
-		  return Results.BadRequest($"'{container}' doesn't seem to be deployed.");
+			return Results.InternalServerError(ex.Message);
 		}
-
-		await orchestrator.Restart(currentContainer);
-
-		return Results.Ok($"Successfully restarted {container}!");
-	  }
-	  catch (Exception ex)
-	  {
-		return Results.InternalServerError(ex.Message);
-	  }
 	})
 	.AddEndpointFilter(async (invocationContext, next) =>
 		await PreRequestMethods.CanConnectToOrchestrator(invocationContext, next))
@@ -161,51 +161,51 @@ app.MapGet("/restart/{container}", async (IOrchestrator orchestrator, string con
 
 app.MapGet("/list", async (IOrchestrator orchestrator) =>
 {
-  try
-  {
-	var output = await orchestrator.List(containers);
+	try
+	{
+		var output = await orchestrator.List(containers);
 
-	return Results.Ok(output);
-  }
-  catch (Exception ex)
-  {
-	return Results.InternalServerError(ex);
-  }
+		return Results.Ok(output);
+	}
+	catch (Exception ex)
+	{
+		return Results.InternalServerError(ex);
+	}
 }).AddEndpointFilter(async (invocationContext, next) =>
 	await PreRequestMethods.CanConnectToOrchestrator(invocationContext, next));
 
 app.MapGet("/debug", async (IOrchestrator orchestrator) =>
 {
-  try
-  {
-	var canConnect = false;
-	Exception? connectionError = null;
-
 	try
 	{
-	  canConnect = await orchestrator.CanConnect();
+		var canConnect = false;
+		Exception? connectionError = null;
+
+		try
+		{
+			canConnect = await orchestrator.CanConnect();
+		}
+		catch (Exception ex)
+		{
+			connectionError = ex;
+		}
+
+		var output = new DebugResponse
+		{
+			CurrentOrchestrator = orchestratorVariable ?? "***NOT SET***",
+			SupportedOrchestrators = orchestrators.Keys.ToList(),
+			IsOrchestratorAccessible = canConnect,
+			OrchestratorConnectionError = connectionError?.Message,
+			Containers = containers,
+			ContainersStatus = await orchestrator.List(containers)
+		};
+
+		return Results.Ok(output);
 	}
 	catch (Exception ex)
 	{
-	  connectionError = ex;
+		return Results.InternalServerError(ex);
 	}
-
-	var output = new DebugResponse
-	{
-	  CurrentOrchestrator = orchestratorVariable ?? "***NOT SET***",
-	  SupportedOrchestrators = orchestrators.Keys.ToList(),
-	  IsOrchestratorAccessible = canConnect,
-	  OrchestratorConnectionError = connectionError?.Message,
-	  Containers = containers,
-	  ContainersStatus = await orchestrator.List(containers)
-	};
-
-	return Results.Ok(output);
-  }
-  catch (Exception ex)
-  {
-	return Results.InternalServerError(ex);
-  }
 });
 
 app.Run();

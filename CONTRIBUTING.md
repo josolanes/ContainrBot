@@ -16,17 +16,18 @@ feature requests or writing code which can be incorporated into ContainrBot itse
 ### Responsibilities
 
 * Before creating a pull request:
-  * Ensure code builds successfully
-  * Ensure unit tests pass
+	* Ensure code builds successfully
+	* Ensure unit tests pass
 * Create issues for changes and enhancements that you wish to make. Discuss things transparently and get
-  community feedback.
+	community feedback.
 * Keep feature versions as small as possible, preferably one new feature per version.
 * Be welcoming to newcomers and encourage diverse new contributors from all backgrounds. See
-  the [Code of Conduct](https://github.com/josolanes/ContainrBot?tab=coc-ov-file#contributor-covenant-code-of-conduct).
+	the [Code of Conduct](https://github.com/josolanes/ContainrBot?tab=coc-ov-file#contributor-covenant-code-of-conduct).
 
 # Your First Contribution
 
-Unsure where to begin contributing to ContainrBot? You can start by looking through these beginner and help-wanted issues:
+Unsure where to begin contributing to ContainrBot? You can start by looking through these beginner and help-wanted
+issues:
 
 * Beginner issues - issues which should only require a few lines of code, and a test or two.
 * Help wanted issues - issues which should be a bit more involved than beginner issues.
@@ -44,11 +45,12 @@ your branch so it's easier to merge.
 1. Create your own fork of the code
 2. Do the changes in your fork
 3. If you like the change and think the project could use it:
-    * Be sure you have followed the code style for the project.
-    * Note the [Code of Conduct](https://github.com/josolanes/ContainrBot?tab=coc-ov-file#contributor-covenant-code-of-conduct).
-    * Send a pull request
-      * If your change adds or modifies features (such as a new chatbot, new orchestrator) please also update the
-      readme to make it easier for other people to use
+	* Be sure you have followed the code style for the project.
+	* Note
+		the [Code of Conduct](https://github.com/josolanes/ContainrBot?tab=coc-ov-file#contributor-covenant-code-of-conduct).
+	* Send a pull request
+		* If your change adds or modifies features (such as a new chatbot, new orchestrator) please also update the
+			readme to make it easier for other people to use
 
 # How to report a bug
 
@@ -108,7 +110,8 @@ isn't showing any activity.
 
 ## Code Style
 
-Code style is enforced with an `.editorconfig` file that is verified on build. To auto-format the code per the `.editorconfig` run `dotnet format` in the repo root
+Code style is enforced with an `.editorconfig` file that is verified on build. To auto-format the code per the
+`.editorconfig` run `dotnet format` in the repo root
 
 ## Issue Labels
 
