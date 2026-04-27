@@ -9,6 +9,8 @@ ContainrBotApi/obj/Debug/
 ContainrBot/bin/
 ContainrBotApi/bin/
 ContainrBot/local-only/
+.idea/
+.vscode/
 
 # User-specific files
 *.rsuser
