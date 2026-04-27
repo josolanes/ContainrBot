@@ -1,13 +1,13 @@
 # ContainrBot
 
-An API exposing docker and kubernetes deploys and a related chat bot to manipulate deploys.
+An API exposing docker and kubernetes deploys and a related chatbot to manipulate deploys.
 
 ## ContainrBotApi
 
 ### Environment Variables
 
 * CONTAINER_LIST: A list of container data objects with these properties:
-	* FriendlyName: The name used when interacting with the chat bot
+	* FriendlyName: The name used when interacting with the chatbot
 	* ContainerName: The container name for the deployable
 	* Namespace: The namespace for the deployable (kubernetes only)
 
@@ -21,8 +21,8 @@ CONTAINER_LIST: "[{\"FriendlyName\": \"valheim\", \"ContainerName\": \"deploy\",
 
 ### Environment Variables
 
-* BOT_TOKEN: Token for the chat bot (Discord Bot Token, etc)
-* CONTAINRBOTAPI_BASEURL: Base url of GameServerApi
+* BOT_TOKEN: Token for the chatbot (Discord Bot Token, etc.)
+* CONTAINRBOTAPI_BASEURL: Base URL of GameServerApi
 
 ## Technologies
 

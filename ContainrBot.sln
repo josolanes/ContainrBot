@@ -9,7 +9,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ContainrBot", "containrbot\
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Solution Items", "_Solution Items", "{1AA1D02F-7116-5B38-8DE8-872F7AF62B98}"
 	ProjectSection(SolutionItems) = preProject
-		readme.md = readme.md
 		.gitignore = .gitignore
 		.github\workflows\docker-publish.yml = .github\workflows\docker-publish.yml
 		.github\dependabot.yml = .github\dependabot.yml
@@ -18,6 +17,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Solution Items", "_Solutio
 		CONTRIBUTING.md = CONTRIBUTING.md
 		LICENSE = LICENSE
 		.editorconfig = .editorconfig
+		README.md = README.md
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ContainrBot.Library", "containrbot.library\ContainrBot.Library.csproj", "{B3F34B2B-9344-4A2B-A3E9-43ABC9BA4D71}"
