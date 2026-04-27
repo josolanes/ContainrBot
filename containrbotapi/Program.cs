@@ -54,6 +54,11 @@ app.UseSwaggerUi(config =>
 
 app.UseDeveloperExceptionPage();
 
+app.MapGet("/health", () => Results.Ok(new
+{
+	status = "pass"
+}));
+
 app.MapGet("/start/{container}", async (IOrchestrator orchestrator, string container) =>
 	{
 		try
