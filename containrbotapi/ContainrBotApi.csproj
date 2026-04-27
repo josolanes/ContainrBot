@@ -6,6 +6,7 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
         <LangVersion>default</LangVersion>
+        <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -13,7 +14,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="JsonPatch.Net" Version="5.0.2" />
+        <PackageReference Include="JsonPatch.Net" Version="5.0.2"/>
         <PackageReference Include="KubernetesClient" Version="19.0.2"/>
         <PackageReference Include="Microsoft.AspNetCore.JsonPatch" Version="10.0.7"/>
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.7"/>

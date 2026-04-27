@@ -1,3 +1,4 @@
+using System.Net;
 using System.Text.Json;
 using ContainrBotApi.Models.Internal;
 using Json.Patch;
@@ -7,128 +8,131 @@ using k8s.Models;
 using Microsoft.AspNetCore.JsonPatch;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace ContainrBotApi.Orchestrators;
 
 public class KubernetesOrchestrator : IOrchestrator
 {
-	private static readonly KubernetesClientConfiguration K8SConfig = KubernetesClientConfiguration.InClusterConfig();
-	private static readonly Kubernetes Client = new(K8SConfig);
+  private static readonly KubernetesClientConfiguration K8SConfig = KubernetesClientConfiguration.InClusterConfig();
+  private static readonly Kubernetes Client = new(K8SConfig);
 
-	public string Name { get; } = "Kubernetes";
+  public string Name { get; } = "Kubernetes";
 
-	public List<string> RequiredContainerProperties { get; } =
-	[
-		nameof(Container.ContainerName),
+  public List<string> RequiredContainerProperties { get; } =
+  [
+	  nameof(Container.ContainerName),
 		nameof(Container.FriendlyName),
 		nameof(Container.Namespace)
-	];
+  ];
 
-	public async Task<IList<string>> List(IList<Container> containers)
+  public async Task<IList<string>> List(IList<Container> containers)
+  {
+	List<string> output = [];
+
+	foreach (var container in containers)
 	{
-		List<string> output = [];
+	  try
+	  {
+		var scale = await Client.ReadNamespacedDeploymentScaleAsync(container.ContainerName, container.Namespace);
+		var isRunning = scale.Spec.Replicas is > 0;
 
-		foreach (var container in containers)
-		{
-			try
-			{
-				var scale = await Client.ReadNamespacedDeploymentScaleAsync(container.ContainerName, container.Namespace);
-				var isRunning = scale.Spec.Replicas is > 0;
-
-				output.Add($"{container.FriendlyName} is {(isRunning ? "running" : "not running")}");
-			}
-			catch
-			{
-				output.Add($"{container.FriendlyName} is not deployed");
-			}
-		}
-
-		return output;
+		output.Add($"{container.FriendlyName} is {(isRunning ? "running" : "not running")}");
+	  }
+	  catch
+	  {
+		output.Add($"{container.FriendlyName} is not deployed");
+	  }
 	}
 
-	public async Task Start(Container container)
+	return output;
+  }
+
+  public async Task Start(Container container)
+  {
+	var patch = new JsonPatchDocument<V1Scale>
 	{
-		var patch = new JsonPatchDocument<V1Scale>
-		{
-			ContractResolver = new DefaultContractResolver
-			{
-				NamingStrategy = new CamelCaseNamingStrategy()
-			}
-		};
-		patch.Replace(e => e.Spec.Replicas, 1);
+	  ContractResolver = new DefaultContractResolver
+	  {
+		NamingStrategy = new CamelCaseNamingStrategy()
+	  }
+	};
+	patch.Replace(e => e.Spec.Replicas, 1);
 
-		var jsonPatchString = JsonConvert.SerializeObject(patch);
+	var jsonPatchString = JsonConvert.SerializeObject(patch);
 
-		var v1Patch = new V1Patch(jsonPatchString, V1Patch.PatchType.JsonPatch);
+	var v1Patch = new V1Patch(jsonPatchString, V1Patch.PatchType.JsonPatch);
 
-		await Client.AppsV1.PatchNamespacedDeploymentScaleAsync(
-			v1Patch,
-			container.ContainerName,
-			container.Namespace);
-	}
+	await Client.AppsV1.PatchNamespacedDeploymentScaleAsync(
+		v1Patch,
+		container.ContainerName,
+		container.Namespace);
+  }
 
-	public async Task Stop(Container container)
+  public async Task Stop(Container container)
+  {
+	var patch = new JsonPatchDocument<V1Scale>
 	{
-		var patch = new JsonPatchDocument<V1Scale>
-		{
-			ContractResolver = new DefaultContractResolver
-			{
-				NamingStrategy = new CamelCaseNamingStrategy()
-			}
-		};
-		patch.Replace(e => e.Spec.Replicas, 0);
+	  ContractResolver = new DefaultContractResolver
+	  {
+		NamingStrategy = new CamelCaseNamingStrategy()
+	  }
+	};
+	patch.Replace(e => e.Spec.Replicas, 0);
 
-		var jsonPatchString = JsonConvert.SerializeObject(patch);
+	var jsonPatchString = JsonConvert.SerializeObject(patch);
 
-		var v1Patch = new V1Patch(jsonPatchString, V1Patch.PatchType.JsonPatch);
+	var v1Patch = new V1Patch(jsonPatchString, V1Patch.PatchType.JsonPatch);
 
-		await Client.AppsV1.PatchNamespacedDeploymentScaleAsync(
-			v1Patch,
-			container.ContainerName,
-			container.Namespace);
-	}
+	await Client.AppsV1.PatchNamespacedDeploymentScaleAsync(
+		v1Patch,
+		container.ContainerName,
+		container.Namespace);
+  }
 
-	public async Task Restart(Container container)
+  public async Task Restart(Container container)
+  {
+	var deployment = await Client.AppsV1.ReadNamespacedDeploymentAsync(container.ContainerName, container.Namespace)
+		.ConfigureAwait(false);
+	var options = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase, WriteIndented = true };
+	var old = JsonSerializer.SerializeToDocument(deployment, options);
+	var now = DateTimeOffset.Now.ToUnixTimeSeconds();
+	var restart = new Dictionary<string, string>
 	{
-		var deployment = await Client.AppsV1.ReadNamespacedDeploymentAsync(container.ContainerName, container.Namespace).ConfigureAwait(false);
-		var options = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase, WriteIndented = true };
-		var old = System.Text.Json.JsonSerializer.SerializeToDocument(deployment, options);
-		var now = DateTimeOffset.Now.ToUnixTimeSeconds();
-		var restart = new Dictionary<string, string>
-		{
-			["date"] = now.ToString(),
-		};
+	  ["date"] = now.ToString()
+	};
 
-		deployment.Spec.Template.Metadata.Annotations = restart;
+	deployment.Spec.Template.Metadata.Annotations = restart;
 
-		var expected = System.Text.Json.JsonSerializer.SerializeToDocument(deployment);
+	var expected = JsonSerializer.SerializeToDocument(deployment);
 
-		var patch = old.CreatePatch(expected);
-		await Client.AppsV1.PatchNamespacedDeploymentAsync(new V1Patch(patch, V1Patch.PatchType.JsonPatch), container.ContainerName, container.Namespace).ConfigureAwait(false);
-	}
+	var patch = old.CreatePatch(expected);
+	await Client.AppsV1.PatchNamespacedDeploymentAsync(new V1Patch(patch, V1Patch.PatchType.JsonPatch),
+		container.ContainerName, container.Namespace).ConfigureAwait(false);
+  }
 
-	public async Task<bool> Exists(Container container)
+  public async Task<bool> Exists(Container container)
+  {
+	try
 	{
-		try
-		{
-			await Client.AppsV1.ReadNamespacedDeploymentAsync(container.ContainerName, container.Namespace);
-			return true;
-		}
-		catch (HttpOperationException ex) when (ex.Response.StatusCode == System.Net.HttpStatusCode.NotFound)
-		{
-			return false;
-		}
+	  await Client.AppsV1.ReadNamespacedDeploymentAsync(container.ContainerName, container.Namespace);
+	  return true;
 	}
-
-	public async Task<bool> CanConnect()
+	catch (HttpOperationException ex) when (ex.Response.StatusCode == HttpStatusCode.NotFound)
 	{
-		return await Task.FromResult((await Client.ListNodeAsync())?.Items?.Any() ?? false);
+	  return false;
 	}
+  }
 
-	public Task<bool> IsContainerValid(Container container)
-	{
-		return Task.FromResult(!string.IsNullOrEmpty(container.ContainerName)
-		       && !string.IsNullOrEmpty(container.FriendlyName)
-		       && !string.IsNullOrEmpty(container.ContainerName));
-	}
+  public async Task<bool> CanConnect()
+  {
+	return await Task.FromResult((await Client.ListNodeAsync())?.Items?.Any() ?? false);
+  }
+
+  public Task<bool> IsContainerValid(Container container)
+  {
+	return Task.FromResult(!string.IsNullOrEmpty(container.ContainerName)
+												 && !string.IsNullOrEmpty(container.FriendlyName)
+												 && !string.IsNullOrEmpty(container.ContainerName));
+  }
 }
