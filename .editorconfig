@@ -7,6 +7,10 @@ indent_style = tab
 [*.md]
 indent_style = unset
 
+[*.{yml,yaml}]
+indent_style = space
+indent_size = 2
+
 # Xml files
 [*.xml]
 indent_size = 2
