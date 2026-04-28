@@ -78,6 +78,7 @@ When filing an issue, make sure to answer these five questions:
 3. What did you do?
 4. What did you expect to see?
 5. What did you see instead?
+6. Please include the output of the `/debug` endpoint in your ContainrBotApi 
 
 Before submitting an issue, please use the ContainrBotApi `/debug` endpoint and ensure everything looks as you'd expect.
 This endpoint tries to be transparent about what the ContainrBot "knows" and if something looks incorrect, it may be a
@@ -96,7 +97,7 @@ We welcome new chatbot and orchestrator integrations, so please suggest them or 
 
 If you find yourself wishing for a feature that doesn't exist in ContainrBot, you are probably not alone. There are
 bound to be others out there with similar needs. Many of the features that ContainrBot has today have been added
-because our users saw the need. Open an issue on our issues list on GitHub which describes the feature you would like to
+because our users saw the need. Open an [issue](https://github.com/josolanes/ContainrBot/issues) on GitHub which describes the feature you would like to
 see, why you need it, and how it should work.
 
 # Code review process
