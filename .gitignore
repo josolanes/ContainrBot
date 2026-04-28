@@ -4,11 +4,11 @@
 ## Get latest from https://github.com/github/gitignore/blob/main/VisualStudio.gitignore
 
 # Ignore files path for debugging
-ContainrBot/obj/Debug/
-ContainrBotApi/obj/Debug/
-ContainrBot/bin/
-ContainrBotApi/bin/
-ContainrBot/local-only/
+containrbot/obj/Debug/
+containrbotapi/obj/Debug/
+containrbot/bin/
+containrbotapi/bin/
+containrbot/local-only/
 .idea/
 .vscode/
 
