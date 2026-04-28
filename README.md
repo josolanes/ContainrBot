@@ -5,11 +5,11 @@ An extensible system allowing one of various container orchestrators to be contr
 ContainrBot is made up of the ContainrBot chatbot and the ContainrBotApi.
 
 The ContainrBot is designed to be easily extended and currently supports the following chat platforms:
- * Discord
+* Discord
 
 ContainrBotApi is also designed to be easily extended and currently supports the following container orchestrators:
- * Docker
- * Kubernetes
+* Docker
+* Kubernetes
  
 If you'd like ContainrBot to support additional chat services and orchestrators, please create an [create an issue](https://github.com/josolanes/ContainrBot/issues).
 
@@ -23,14 +23,14 @@ The ContainrBotApi is responsible for interacting with the chosen orchestrator (
 
 #### ORCHESTRATOR
 The orchestrator the ContainrBotApi will interact with. Currently supported options are:
-  * Docker
-  * Kubernetes
+* Docker
+* Kubernetes
 
 #### CONTAINER_LIST
 A JSON array of container objects with these properties:
-  * FriendlyName: The name used when interacting with the ContainrBot
-  * ContainerName: The container name for the deployable
-  * Namespace: The namespace for the deployable (_optional_, orchestrator-dependent)
+* FriendlyName: The name used when interacting with the ContainrBot
+* ContainerName: The container name for the deployable
+* Namespace: The namespace for the deployable (_optional_, orchestrator-dependent)
 
 Examples:
 ```
