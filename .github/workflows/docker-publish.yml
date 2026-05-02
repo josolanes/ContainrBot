@@ -70,7 +70,7 @@ jobs:
         if: github.ref == 'refs/heads/main' # Only tag on the main branch
         with:
           tag: ${{ steps.semver.outputs.version }}
-          tag_exists_error: false
+          force_push_tag: true
           message: "Latest version"
 
       # Set up BuildKit Docker container builder to be able to build
