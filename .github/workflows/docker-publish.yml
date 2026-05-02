@@ -87,7 +87,7 @@ jobs:
             ghcr.io/josolanes/containrbot/${{ matrix.image }}
           tags: |
             # This automatically uses the current git tag
-            type=ref,event=tag
+            type=raw,value=${{ steps.semver.outputs.version }}
             # Optional: also tag as 'latest' for every new git tag
             type=raw,value=latest
 
