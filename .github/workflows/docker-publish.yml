@@ -65,11 +65,13 @@ jobs:
           # A string to determine the format of the version output
           version_format: "${major}.${minor}.${patch}-prerelease${increment}"
 
-      - name: Create Git Tag
+      - uses: rickstaa/action-create-tag@v1
+        id: "tag_create"
         if: github.ref == 'refs/heads/main' # Only tag on the main branch
-        run: |
-          git tag ${{ steps.semver.outputs.version }}
-          git push origin ${{ steps.semver.outputs.version }}
+        with:
+          tag: ${{ steps.semver.outputs.version }}
+          tag_exists_error: false
+          message: "Latest version"
 
       # Set up BuildKit Docker container builder to be able to build
       # multi-platform images and export cache
