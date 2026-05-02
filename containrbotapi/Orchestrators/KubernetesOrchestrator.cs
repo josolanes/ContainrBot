@@ -18,11 +18,8 @@ using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace ContainrBotApi.Orchestrators;
 
-public class KubernetesOrchestrator : IOrchestrator
+public class KubernetesOrchestrator(IKubernetes client) : IOrchestrator
 {
-	private static readonly KubernetesClientConfiguration K8SConfig = KubernetesClientConfiguration.InClusterConfig();
-	private static readonly Kubernetes Client = new(K8SConfig);
-
 	public string Name => "Kubernetes";
 
 	public List<string> RequiredContainerProperties { get; } =
@@ -31,6 +28,10 @@ public class KubernetesOrchestrator : IOrchestrator
 		nameof(Container.FriendlyName),
 		nameof(Container.Namespace)
 	];
+	
+	public KubernetesOrchestrator() : this(new Kubernetes(KubernetesClientConfiguration.InClusterConfig()))
+	{
+	}
 
 	public async Task<IList<string>> List(IList<Container> containers)
 	{
@@ -40,8 +41,8 @@ public class KubernetesOrchestrator : IOrchestrator
 		{
 			try
 			{
-				var scale = await Client.ReadNamespacedDeploymentScaleAsync(container.ContainerName, container.Namespace);
-				var isRunning = scale.Spec.Replicas is > 0;
+				var scale = await client.AppsV1.ReadNamespacedDeploymentScaleWithHttpMessagesAsync(container.ContainerName, container.Namespace);
+				var isRunning = scale.Body.Spec.Replicas is > 0;
 
 				output.Add($"{container.FriendlyName} is {(isRunning ? "running" : "not running")}");
 			}
@@ -69,7 +70,7 @@ public class KubernetesOrchestrator : IOrchestrator
 
 		var v1Patch = new V1Patch(jsonPatchString, V1Patch.PatchType.JsonPatch);
 
-		await Client.AppsV1.PatchNamespacedDeploymentScaleAsync(
+		await client.AppsV1.PatchNamespacedDeploymentScaleWithHttpMessagesAsync(
 			v1Patch,
 			container.ContainerName,
 			container.Namespace);
@@ -90,7 +91,7 @@ public class KubernetesOrchestrator : IOrchestrator
 
 		var v1Patch = new V1Patch(jsonPatchString, V1Patch.PatchType.JsonPatch);
 
-		await Client.AppsV1.PatchNamespacedDeploymentScaleAsync(
+		await client.AppsV1.PatchNamespacedDeploymentScaleWithHttpMessagesAsync(
 			v1Patch,
 			container.ContainerName,
 			container.Namespace);
@@ -98,33 +99,26 @@ public class KubernetesOrchestrator : IOrchestrator
 
 	public async Task Restart(Container container)
 	{
-		var deployment = await Client.AppsV1.ReadNamespacedDeploymentAsync(container.ContainerName, container.Namespace)
-			.ConfigureAwait(false);
-		var options = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase, WriteIndented = true };
-		var old = JsonSerializer.SerializeToDocument(deployment, options);
-		var now = DateTimeOffset.Now.ToUnixTimeSeconds();
-		var restart = new Dictionary<string, string>
+		var patch = new JsonPatchDocument<V1Deployment>();
+		patch.Replace(d => d.Spec.Template.Metadata.Annotations, new Dictionary<string, string>
 		{
-			["date"] = now.ToString()
-		};
-
-		deployment.Spec.Template.Metadata.Annotations = restart;
-
-		var expected = JsonSerializer.SerializeToDocument(deployment);
-
-		var patch = old.CreatePatch(expected);
-		await Client.AppsV1.PatchNamespacedDeploymentAsync(new V1Patch(patch, V1Patch.PatchType.JsonPatch),
-			container.ContainerName, container.Namespace).ConfigureAwait(false);
+			["kubectl.kubernetes.io/restartedAt"] = DateTime.UtcNow.ToString("s")
+		});
+		
+		var jsonPatchString = JsonConvert.SerializeObject(patch);
+		
+		await client.AppsV1.PatchNamespacedDeploymentWithHttpMessagesAsync(new V1Patch(jsonPatchString, V1Patch.PatchType.JsonPatch),
+			container.ContainerName, container.Namespace);
 	}
 
 	public async Task<bool> Exists(Container container)
 	{
 		try
 		{
-			await Client.AppsV1.ReadNamespacedDeploymentAsync(container.ContainerName, container.Namespace);
+			await client.AppsV1.ReadNamespacedDeploymentWithHttpMessagesAsync(container.ContainerName, container.Namespace);
 			return true;
 		}
-		catch (HttpOperationException ex) when (ex.Response.StatusCode == HttpStatusCode.NotFound)
+		catch
 		{
 			return false;
 		}
@@ -132,7 +126,14 @@ public class KubernetesOrchestrator : IOrchestrator
 
 	public async Task<bool> CanConnect()
 	{
-		return await Task.FromResult((await Client.ListNodeAsync())?.Items?.Any() ?? false);
+		try
+		{
+			return await Task.FromResult((await client.CoreV1.ListNodeWithHttpMessagesAsync())?.Body.Items?.Any() ?? false);
+		}
+		catch
+		{
+			return false;
+		}
 	}
 
 	public Task<bool> IsContainerValid(Container container)

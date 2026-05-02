@@ -14,7 +14,7 @@ var containrbotapiUrl = Helpers.GetRequiredEnvironmentVariable(builder, "CONTAIN
 var token = GetBotToken();
 
 builder.Services.AddHttpClient<IContainrBotApiService, ContainrBotApiService>("containrbotapi",
-	client => { client.BaseAddress = new Uri(containrbotapiUrl); });
+	client => client.BaseAddress = new Uri(containrbotapiUrl));
 
 // Conditional services
 switch (chatbot.ToLowerInvariant())

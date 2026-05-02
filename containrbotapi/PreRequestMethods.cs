@@ -10,7 +10,7 @@ public static class PreRequestMethods
 		EndpointFilterDelegate next)
 	{
 		var orchestrator = invocationContext.GetArgument<IOrchestrator>(0);
-		var canConnect = false;
+		bool canConnect;
 		Exception? exception = null;
 
 		try

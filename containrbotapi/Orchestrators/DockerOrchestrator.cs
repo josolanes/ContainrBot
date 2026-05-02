@@ -5,19 +5,21 @@ using Docker.DotNet.Models;
 
 namespace ContainrBotApi.Orchestrators;
 
-public class DockerOrchestrator : IOrchestrator
+public class DockerOrchestrator(IDockerClient client) : IOrchestrator
 {
 	private const string DockerEndpoint = "unix:///var/run/docker.sock";
 
-	private static readonly DockerClient Client = new DockerClientConfiguration(new Uri(DockerEndpoint)).CreateClient();
-
 	public string Name => "Docker";
-
+	
 	public List<string> RequiredContainerProperties { get; } =
 	[
 		nameof(Container.ContainerName),
 		nameof(Container.FriendlyName)
 	];
+
+	public DockerOrchestrator() : this(new DockerClientConfiguration(new Uri(DockerEndpoint)).CreateClient())
+	{
+	}
 
 	public async Task<IList<string>> List(IList<Container> containers)
 	{
@@ -27,13 +29,11 @@ public class DockerOrchestrator : IOrchestrator
 		{
 			try
 			{
-				var status = await Client.Containers.InspectContainerAsync(container.ContainerName);
+				var status = await client.Containers.InspectContainerAsync(container.ContainerName);
 
-				var isRunning = status.State.Running;
-
-				output.Add($"{container.FriendlyName} is {(isRunning ? "running" : "not running")}");
+				output.Add($"{container.FriendlyName} is {(status.State.Running ? "running" : "not running")}");
 			}
-			catch (Exception ex)
+			catch
 			{
 				output.Add($"{container.FriendlyName} is not deployed");
 			}
@@ -44,24 +44,24 @@ public class DockerOrchestrator : IOrchestrator
 
 	public async Task Start(Container container)
 	{
-		await Client.Containers.StartContainerAsync(container.ContainerName, new ContainerStartParameters());
+		await client.Containers.StartContainerAsync(container.ContainerName, new ContainerStartParameters());
 	}
 
 	public async Task Stop(Container container)
 	{
-		await Client.Containers.StopContainerAsync(container.ContainerName, new ContainerStopParameters());
+		await client.Containers.StopContainerAsync(container.ContainerName, new ContainerStopParameters());
 	}
 
 	public async Task Restart(Container container)
 	{
-		await Client.Containers.RestartContainerAsync(container.ContainerName, new ContainerRestartParameters());
+		await client.Containers.RestartContainerAsync(container.ContainerName, new ContainerRestartParameters());
 	}
 
 	public async Task<bool> Exists(Container container)
 	{
 		try
 		{
-			await Client.Containers.InspectContainerAsync(container.ContainerName);
+			await client.Containers.InspectContainerAsync(container.ContainerName);
 			return true;
 		}
 		catch
@@ -72,7 +72,14 @@ public class DockerOrchestrator : IOrchestrator
 
 	public async Task<bool> CanConnect()
 	{
-		return await Task.FromResult((await Client.System.GetVersionAsync())?.Components.Count > 0);
+		try
+		{
+			return await Task.FromResult((await client.System.GetVersionAsync())?.Components.Count > 0);
+		}
+		catch
+		{
+			return false;
+		}
 	}
 
 	public Task<bool> IsContainerValid(Container container)

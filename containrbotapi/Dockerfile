@@ -7,12 +7,14 @@ ARG configuration=Release
 WORKDIR /src
 COPY . .
 RUN dotnet restore "containrbot.library/ContainrBot.Library.csproj"
+RUN dotnet restore "containrbotapi/ContainrBotApi.csproj"
+RUN dotnet restore "containrbotapi.tests/ContainrBotApi.Tests.csproj"
 COPY . .
 RUN dotnet build "containrbot.library/ContainrBot.Library.csproj" -c $configuration -o /app/build
-COPY . .
-RUN dotnet restore "containrbotapi/ContainrBotApi.csproj"
-COPY . .
 RUN dotnet build "containrbotapi/ContainrBotApi.csproj" -c $configuration -o /app/build
+COPY . .
+RUN dotnet test "containrbotapi.tests/ContainrBotApi.Tests.csproj" --configuration Release --no-restore
+COPY . .
 
 FROM build AS publish
 ARG configuration=Release
