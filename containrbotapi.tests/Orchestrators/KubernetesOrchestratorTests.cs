@@ -200,7 +200,7 @@ public class KubernetesOrchestratorTests
 	{	
 		var kubernetesClient = new Mock<IKubernetes>();
 		kubernetesClient.Setup(s =>
-			s.AppsV1.PatchNamespacedDeploymentWithHttpMessagesAsync(It.IsAny<V1Patch>(), It.IsAny<string>(), It.IsAny<string>()));
+			s.AppsV1.PatchNamespacedDeploymentScaleWithHttpMessagesAsync(It.IsAny<V1Patch>(), It.IsAny<string>(), It.IsAny<string>()));
 		
 		var orchestrator = new KubernetesOrchestrator(kubernetesClient.Object);
 
@@ -219,7 +219,7 @@ public class KubernetesOrchestratorTests
 	{
 		var kubernetesClient = new Mock<IKubernetes>();
 		kubernetesClient.Setup(s =>
-			s.AppsV1.PatchNamespacedDeploymentWithHttpMessagesAsync(It.IsAny<V1Patch>(), It.IsAny<string>(), It.IsAny<string>()))
+			s.AppsV1.PatchNamespacedDeploymentScaleWithHttpMessagesAsync(It.IsAny<V1Patch>(), It.IsAny<string>(), It.IsAny<string>()))
 			.ThrowsAsync(new Exception());
 		
 		var orchestrator = new KubernetesOrchestrator(kubernetesClient.Object);

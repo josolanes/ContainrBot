@@ -99,16 +99,8 @@ public class KubernetesOrchestrator(IKubernetes client) : IOrchestrator
 
 	public async Task Restart(Container container)
 	{
-		var patch = new JsonPatchDocument<V1Deployment>();
-		patch.Replace(d => d.Spec.Template.Metadata.Annotations, new Dictionary<string, string>
-		{
-			["kubectl.kubernetes.io/restartedAt"] = DateTime.UtcNow.ToString("s")
-		});
-		
-		var jsonPatchString = JsonConvert.SerializeObject(patch);
-		
-		await client.AppsV1.PatchNamespacedDeploymentWithHttpMessagesAsync(new V1Patch(jsonPatchString, V1Patch.PatchType.JsonPatch),
-			container.ContainerName, container.Namespace);
+		await Stop(container);
+		await Start(container);
 	}
 
 	public async Task<bool> Exists(Container container)
