@@ -48,6 +48,7 @@ jobs:
           fetch-depth: 0    # fetch all history
         
       - name: Set Semantic Version
+        id: semver
         uses: paulhatch/semantic-version@v5.4.0
         with:
           # The prefix to use to identify tags
@@ -63,6 +64,12 @@ jobs:
           minor_regexp_flags: ""
           # A string to determine the format of the version output
           version_format: "${major}.${minor}.${patch}-prerelease${increment}"
+
+      - name: Create Git Tag
+        if: github.ref == 'refs/heads/main' # Only tag on the main branch
+        run: |
+          git tag ${{ steps.semver.outputs.version }}
+          git push origin ${{ steps.semver.outputs.version }}
 
       # Set up BuildKit Docker container builder to be able to build
       # multi-platform images and export cache
