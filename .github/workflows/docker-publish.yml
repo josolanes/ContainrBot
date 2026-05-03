@@ -65,13 +65,15 @@ jobs:
           # A string to determine the format of the version output
           version_format: "${major}.${minor}.${patch}-prerelease${increment}"
 
-      - uses: rickstaa/action-create-tag@v1
-        id: "tag_create"
+      - name: Create GitHub Release/Tag
+        uses: softprops/action-gh-release@v2
         if: github.ref == 'refs/heads/main' # Only tag on the main branch
         with:
-          tag: ${{ steps.semver.outputs.version }}
-          tag_exists_error: false
-          message: "Latest version"
+          # Use the version_tag output from the previous step
+          tag_name: ${{ steps.semver.outputs.version_tag }}
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.PUBLISH_ACTIONS }}
 
       # Set up BuildKit Docker container builder to be able to build
       # multi-platform images and export cache
