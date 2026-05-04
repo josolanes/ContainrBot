@@ -20,9 +20,9 @@
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.7"/>
-		<PackageReference Include="NetCord" Version="1.0.0-alpha.485"/>
-		<PackageReference Include="NetCord.Hosting" Version="1.0.0-alpha.485"/>
-		<PackageReference Include="NetCord.Hosting.AspNetCore" Version="1.0.0-alpha.485"/>
+		<PackageReference Include="NetCord" Version="1.0.0-alpha.486"/>
+		<PackageReference Include="NetCord.Hosting" Version="1.0.0-alpha.486"/>
+		<PackageReference Include="NetCord.Hosting.AspNetCore" Version="1.0.0-alpha.486"/>
 		<PackageReference Include="NetCord.Hosting.Services" Version="1.0.0-alpha.485"/>
 		<PackageReference Include="NetCord.Services" Version="1.0.0-alpha.485"/>
 	</ItemGroup>
