@@ -10,7 +10,7 @@ public class DockerOrchestrator(IDockerClient client) : IOrchestrator
 	private const string DockerEndpoint = "unix:///var/run/docker.sock";
 
 	public string Name => "Docker";
-	
+
 	public List<string> RequiredContainerProperties { get; } =
 	[
 		nameof(Container.ContainerName),

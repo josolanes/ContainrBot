@@ -15,7 +15,7 @@
 	</PropertyGroup>
 
 	<Target Name="EditorConfig Validation" AfterTargets="Build">
-		<Exec Command="dotnet format --verify-no-changes"/>
+		<Exec Command="editorconfig-checker"/>
 	</Target>
 
 	<ItemGroup>

@@ -17,24 +17,24 @@ public class KubernetesOrchestratorTests
 	public void Name()
 	{
 		var orchestrator = new KubernetesOrchestrator(It.IsAny<IKubernetes>());
-		
+
 		var expected = orchestrator.Name.Replace("Orchestrator", string.Empty);
-		
+
 		Assert.That(orchestrator.Name, Is.EqualTo(expected));
 	}
-	
+
 	[Test]
 	public void RequiredContainerProperties()
 	{
 		var orchestrator = new KubernetesOrchestrator(It.IsAny<IKubernetes>());
-		
+
 		Assert.That(orchestrator.RequiredContainerProperties, Is.EqualTo([
 			nameof(Container.ContainerName),
 			nameof(Container.FriendlyName),
 			nameof(Container.Namespace)
 		]));
 	}
-	
+
 	[TestCase(1)]
 	[TestCase(100)]
 	public async Task List_IsRunning(int replicas)
@@ -62,10 +62,10 @@ public class KubernetesOrchestratorTests
 		};
 
 		var result = await orchestrator.List([container]);
-		
-		Assert.That(result, Is.EqualTo([ $"{container.FriendlyName} is running" ]));
+
+		Assert.That(result, Is.EqualTo([$"{container.FriendlyName} is running"]));
 	}
-	
+
 	[Test]
 	public async Task List_IsNotRunning()
 	{
@@ -92,10 +92,10 @@ public class KubernetesOrchestratorTests
 		};
 
 		var result = await orchestrator.List([container]);
-		
-		Assert.That(result, Is.EqualTo([ $"{container.FriendlyName} is not running" ]));
+
+		Assert.That(result, Is.EqualTo([$"{container.FriendlyName} is not running"]));
 	}
-	
+
 	[Test]
 	public async Task List_IsNotDeployed()
 	{
@@ -113,10 +113,10 @@ public class KubernetesOrchestratorTests
 		};
 
 		var result = await orchestrator.List([container]);
-		
-		Assert.That(result, Is.EqualTo([ $"{container.FriendlyName} is not deployed" ]));
+
+		Assert.That(result, Is.EqualTo([$"{container.FriendlyName} is not deployed"]));
 	}
-	
+
 	[Test]
 	public void Start_Success()
 	{
@@ -132,10 +132,10 @@ public class KubernetesOrchestratorTests
 			ContainerName = "SomeContainer",
 			Namespace = "SomeNamespace"
 		};
-		
+
 		Assert.DoesNotThrowAsync(async () => await orchestrator.Start(container));
 	}
-	
+
 	[Test]
 	public void Start_Throws()
 	{
@@ -152,10 +152,10 @@ public class KubernetesOrchestratorTests
 			ContainerName = "SomeContainer",
 			Namespace = "SomeNamespace"
 		};
-		
+
 		Assert.CatchAsync(async () => await orchestrator.Start(container));
 	}
-	
+
 	[Test]
 	public void Stop_Success()
 	{
@@ -171,10 +171,10 @@ public class KubernetesOrchestratorTests
 			ContainerName = "SomeContainer",
 			Namespace = "SomeNamespace"
 		};
-		
+
 		Assert.DoesNotThrowAsync(async () => await orchestrator.Stop(container));
 	}
-	
+
 	[Test]
 	public void Stop_Throws()
 	{
@@ -191,17 +191,17 @@ public class KubernetesOrchestratorTests
 			ContainerName = "SomeContainer",
 			Namespace = "SomeNamespace"
 		};
-		
+
 		Assert.CatchAsync(async () => await orchestrator.Stop(container));
 	}
-	
+
 	[Test]
 	public void Restart_Success()
-	{	
+	{
 		var kubernetesClient = new Mock<IKubernetes>();
 		kubernetesClient.Setup(s =>
 			s.AppsV1.PatchNamespacedDeploymentScaleWithHttpMessagesAsync(It.IsAny<V1Patch>(), It.IsAny<string>(), It.IsAny<string>()));
-		
+
 		var orchestrator = new KubernetesOrchestrator(kubernetesClient.Object);
 
 		var container = new Container()
@@ -210,10 +210,10 @@ public class KubernetesOrchestratorTests
 			ContainerName = "SomeContainer",
 			Namespace = "SomeNamespace"
 		};
-		
+
 		Assert.DoesNotThrowAsync(async () => await orchestrator.Restart(container));
 	}
-	
+
 	[Test]
 	public void Restart_Throws()
 	{
@@ -221,7 +221,7 @@ public class KubernetesOrchestratorTests
 		kubernetesClient.Setup(s =>
 			s.AppsV1.PatchNamespacedDeploymentScaleWithHttpMessagesAsync(It.IsAny<V1Patch>(), It.IsAny<string>(), It.IsAny<string>()))
 			.ThrowsAsync(new Exception());
-		
+
 		var orchestrator = new KubernetesOrchestrator(kubernetesClient.Object);
 
 		var container = new Container()
@@ -230,17 +230,17 @@ public class KubernetesOrchestratorTests
 			ContainerName = "SomeContainer",
 			Namespace = "SomeNamespace"
 		};
-		
+
 		Assert.CatchAsync(async () => await orchestrator.Restart(container));
 	}
-	
+
 	[Test]
 	public void Exists_ReturnsTrue()
 	{
 		var kubernetesClient = new Mock<IKubernetes>();
 		kubernetesClient.Setup(s =>
 			s.AppsV1.ReadNamespacedDeploymentWithHttpMessagesAsync(It.IsAny<string>(), It.IsAny<string>()));
-		
+
 		var orchestrator = new KubernetesOrchestrator(kubernetesClient.Object);
 
 		var container = new Container()
@@ -250,18 +250,18 @@ public class KubernetesOrchestratorTests
 			Namespace = "SomeNamespace"
 		};
 
-		Assert.DoesNotThrowAsync(async() => await orchestrator.Exists(container));
-		Assert.ThatAsync(async() => await orchestrator.Exists(container), Is.True);
+		Assert.DoesNotThrowAsync(async () => await orchestrator.Exists(container));
+		Assert.ThatAsync(async () => await orchestrator.Exists(container), Is.True);
 	}
-	
+
 	[Test]
 	public void Exists_ReturnsFalse()
 	{
 		var kubernetesClient = new Mock<IKubernetes>();
 		kubernetesClient.Setup(s =>
 			s.AppsV1.ReadNamespacedDeploymentWithHttpMessagesAsync(It.IsAny<string>(), It.IsAny<string>()))
-			.ThrowsAsync(new  Exception());
-		
+			.ThrowsAsync(new Exception());
+
 		var orchestrator = new KubernetesOrchestrator(kubernetesClient.Object);
 
 		var container = new Container()
@@ -270,11 +270,11 @@ public class KubernetesOrchestratorTests
 			ContainerName = "SomeContainer",
 			Namespace = "SomeNamespace"
 		};
-		
-		Assert.DoesNotThrowAsync(async() => await orchestrator.Exists(container));
-		Assert.ThatAsync(async() => await orchestrator.Exists(container), Is.False);
+
+		Assert.DoesNotThrowAsync(async () => await orchestrator.Exists(container));
+		Assert.ThatAsync(async () => await orchestrator.Exists(container), Is.False);
 	}
-	
+
 	[Test]
 	public void CanConnect_ReturnsTrue()
 	{
@@ -284,29 +284,29 @@ public class KubernetesOrchestratorTests
 			{
 				Body = new V1NodeList()
 				{
-					Items = [ new V1Node() ]
+					Items = [new V1Node()]
 				}
 			});
-		
+
 		var orchestrator = new KubernetesOrchestrator(kubernetesClient.Object);
-		
+
 		Assert.DoesNotThrowAsync(async () => await orchestrator.CanConnect());
-		Assert.ThatAsync(async() => await orchestrator.CanConnect(), Is.True);
+		Assert.ThatAsync(async () => await orchestrator.CanConnect(), Is.True);
 	}
-	
+
 	[Test]
 	public void CanConnect_Exception_ReturnsFalse()
 	{
 		var kubernetesClient = new Mock<IKubernetes>();
 		kubernetesClient.Setup(s => s.CoreV1.ListNodeWithHttpMessagesAsync())
 			.ThrowsAsync(new Exception());
-		
+
 		var orchestrator = new KubernetesOrchestrator(kubernetesClient.Object);
-		
+
 		Assert.DoesNotThrowAsync(async () => await orchestrator.CanConnect());
-		Assert.ThatAsync(async() => await orchestrator.CanConnect(), Is.False);
+		Assert.ThatAsync(async () => await orchestrator.CanConnect(), Is.False);
 	}
-	
+
 	[Test]
 	public void CanConnect_ReturnsFalse()
 	{
@@ -319,45 +319,45 @@ public class KubernetesOrchestratorTests
 					Items = []
 				}
 			});
-		
+
 		var orchestrator = new KubernetesOrchestrator(kubernetesClient.Object);
-		
+
 		Assert.DoesNotThrowAsync(async () => await orchestrator.CanConnect());
-		Assert.ThatAsync(async() => await orchestrator.CanConnect(), Is.False);
+		Assert.ThatAsync(async () => await orchestrator.CanConnect(), Is.False);
 	}
-	
+
 	[Test]
 	public async Task IsContainerValid_ReturnsTrue()
 	{
 		var kubernetesClient = new Mock<IKubernetes>();
-		
+
 		var container = new Container()
 		{
 			FriendlyName = "SomeContainer",
 			ContainerName = "SomeContainer",
 			Namespace = "SomeNamespace"
 		};
-		
+
 		var orchestrator = new KubernetesOrchestrator(kubernetesClient.Object);
 		var isValid = await orchestrator.IsContainerValid(container);
-		
+
 		Assert.That(isValid, Is.True);
 	}
-	
+
 	[Test]
 	public async Task IsContainerValid_ReturnsFalse()
 	{
 		var kubernetesClient = new Mock<IKubernetes>();
-		
+
 		var container = new Container()
 		{
 			FriendlyName = "SomeContainer",
 			ContainerName = "SomeContainer"
 		};
-		
+
 		var orchestrator = new KubernetesOrchestrator(kubernetesClient.Object);
 		var isValid = await orchestrator.IsContainerValid(container);
-		
+
 		Assert.That(isValid, Is.False);
 	}
 }

@@ -28,7 +28,7 @@ public class KubernetesOrchestrator(IKubernetes client) : IOrchestrator
 		nameof(Container.FriendlyName),
 		nameof(Container.Namespace)
 	];
-	
+
 	public KubernetesOrchestrator() : this(new Kubernetes(KubernetesClientConfiguration.InClusterConfig()))
 	{
 	}
@@ -131,7 +131,7 @@ public class KubernetesOrchestrator(IKubernetes client) : IOrchestrator
 	public Task<bool> IsContainerValid(Container container)
 	{
 		return Task.FromResult(!string.IsNullOrEmpty(container.ContainerName)
-							   && !string.IsNullOrEmpty(container.FriendlyName)
-							   && !string.IsNullOrEmpty(container.Namespace));
+			&& !string.IsNullOrEmpty(container.FriendlyName)
+			&& !string.IsNullOrEmpty(container.Namespace));
 	}
 }

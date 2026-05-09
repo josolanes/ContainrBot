@@ -11,4 +11,8 @@
 		<PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.7"/>
 	</ItemGroup>
 
+	<Target Name="EditorConfig Validation" AfterTargets="Build">
+		<Exec Command="editorconfig-checker"/>
+	</Target>
+
 </Project>

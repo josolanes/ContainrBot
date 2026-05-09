@@ -28,11 +28,10 @@ indent_size = 2
 #### Core EditorConfig Options ####
 
 # Indentation and spacing
-indent_size = 4
-tab_width = 4
+indent_size = 2
 
 # New line preferences
-insert_final_newline = false
+insert_final_newline = unset
 
 #### .NET Coding Conventions ####
 [*.cs]
@@ -386,3 +385,6 @@ dotnet_naming_style.s_camelcase.required_suffix =
 dotnet_naming_style.s_camelcase.word_separator = 
 dotnet_naming_style.s_camelcase.capitalization = camel_case
 
+## Exclude the following files
+[LICENSE]
+indent_style = unset
