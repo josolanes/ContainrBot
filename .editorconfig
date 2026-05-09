@@ -388,3 +388,10 @@ dotnet_naming_style.s_camelcase.capitalization = camel_case
 ## Exclude the following files
 [LICENSE]
 indent_style = unset
+
+# Build files
+[*/obj/**]
+indent_style = unset
+
+[*/bin/**]
+indent_style = unset

@@ -5,6 +5,8 @@ EXPOSE 8080
 FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 ARG configuration=Release
 WORKDIR /src
+COPY --from=node:slim /usr/local/bin /usr/local/bin
+COPY --from=node:slim /usr/local/lib/node_modules /usr/local/lib/node_modules
 COPY . .
 RUN dotnet restore "containrbot.library/ContainrBot.Library.csproj"
 RUN dotnet restore "containrbot/ContainrBot.csproj"
