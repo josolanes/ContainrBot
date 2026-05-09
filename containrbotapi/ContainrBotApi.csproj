@@ -22,8 +22,12 @@
 		<PackageReference Include="NSwag.AspNetCore" Version="14.7.1"/>
 	</ItemGroup>
 
-	<Target Name="EditorConfig Validation" AfterTargets="Build">
-		<Exec Command="editorconfig-checker"/>
+	<Target Name="RunEditorConfigChecker" BeforeTargets="CoreCompile">
+		<Exec Command="npx editorconfig-checker" StandardErrorImportance="High">
+			<Output TaskParameter="ConsoleOutput" PropertyName="ECoutput" />
+		</Exec>
+
+		<Message Text="$(ECoutput)" Importance="High" />
 	</Target>
 
 	<ItemGroup>

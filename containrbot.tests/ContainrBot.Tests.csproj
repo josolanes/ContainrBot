@@ -21,6 +21,14 @@
 				<Using Include="NUnit.Framework"/>
 		</ItemGroup>
 
+		<Target Name="RunEditorConfigChecker" BeforeTargets="CoreCompile">
+			<Exec Command="npx editorconfig-checker" StandardErrorImportance="High">
+				<Output TaskParameter="ConsoleOutput" PropertyName="ECoutput" />
+			</Exec>
+	
+			<Message Text="$(ECoutput)" Importance="High" />
+		</Target>
+
 		<ItemGroup>
 				<ProjectReference Include="..\containrbot\ContainrBot.csproj" />
 		</ItemGroup>
