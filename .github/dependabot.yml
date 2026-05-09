@@ -9,6 +9,10 @@ updates:
     target-branch: "main" # The branch you want updates to be merged into
     rebase-strategy: "auto" # Options: auto, widen, deepen
     open-pull-requests-limit: 5 # Limit the number of open PRs from Dependabot
+    groups:
+      all:
+        patterns:
+          - "*"
 
   - package-ecosystem: "docker"
     directory: "/containrbotapi" # Adjust to the directory where your Dockerfile is located
@@ -19,6 +23,10 @@ updates:
     target-branch: "main" # The branch you want updates to be merged into
     rebase-strategy: "auto" # Options: auto, widen, deepen
     open-pull-requests-limit: 5 # Limit the number of open PRs from Dependabot
+    groups:
+      all:
+        patterns:
+          - "*"
 
   - package-ecosystem: "nuget"
     directory: "/" # Adjust to the directory where your Dockerfile is located
@@ -29,3 +37,7 @@ updates:
     target-branch: "main" # The branch you want updates to be merged into
     rebase-strategy: "auto" # Options: auto, widen, deepen
     open-pull-requests-limit: 5 # Limit the number of open PRs from Dependabot
+    groups:
+      all:
+        patterns:
+          - "*"
