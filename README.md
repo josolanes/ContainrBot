@@ -38,7 +38,7 @@ ORCHESTRATOR: docker
 ```
 
 ```
-CONTAINER_LIST: "[{\"FriendlyName\": \"valheim\", \"ContainerName\": \"deploy\", \"Namespace\": \"valheim-server\"}, {\"FriendlyName\": \"cncnet\", \"ContainerName\": \"deploy\", \"Namespace\": \"cncnet-server\"}, {\"FriendlyName\": \"satisfactory\", \"ContainerName\": \"deploy\", \"Namespace\": \"satisfactory-server\"}]"
+CONTAINER_LIST: "[{\"FriendlyName\": \"valheim\", \"ContainerName\": \"valheim\"}, {\"FriendlyName\": \"cncnet\", \"ContainerName\": \"cncnet\"}, {\"FriendlyName\": \"satisfactory\", \"ContainerName\": \"satisfactory\"}]"
 ```
 
 ## The ContainrBot
