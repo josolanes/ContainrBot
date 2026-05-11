@@ -77,7 +77,7 @@ This is the token used to interact with the chosen chat platform
 * Docker.DotNet for Docker management
 * NetCord for setting up the bot interactions with Discord
 
-# Docker Compose Example
+## Docker Compose Example
 
 ```yaml
 services:
