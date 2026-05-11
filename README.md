@@ -1,3 +1,11 @@
+<p style="text-align: center;">
+  <a href="https://github.com/josolanes/containrbot/releases/latest"><img src="https://img.shields.io/github/v/release/josolanes/containrbot?label=latest%20release&color=blue" alt="Latest Release"></a>
+  <a href="https://github.com/josolanes/containrbot/actions/workflows/docker-publish.yml"><img src="https://img.shields.io/github/actions/workflow/status/josolanes/containrbot/docker-publish.yml?label=build" alt="Build Status"></a>
+  <a href="https://opensource.org/license/gpl-3.0"><img src="https://img.shields.io/badge/license-%20%20GNU%20GPLv3%20-green" alt="License: GPLv3"></a>
+  <a href="https://github.com/josolanes/containrbot/stargazers"><img src="https://img.shields.io/github/stars/josolanes/containrbot?style=flat" alt="GitHub Stars"></a>
+  <a href="https://github.com/josolanes/containrbot/graphs/contributors"><img src="https://img.shields.io/github/contributors/josolanes/containrbot" alt="GitHub Contributors"></a>
+</p>
+
 # ContainrBot
 
 An extensible system allowing one of various container orchestrators to be controlled from one of various chat platforms.
