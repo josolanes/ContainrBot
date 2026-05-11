@@ -1,12 +1,12 @@
-<p style="text-align: center;">
+# ContainrBot
+
+<p align="center">
   <a href="https://github.com/josolanes/containrbot/releases/latest"><img src="https://img.shields.io/github/v/release/josolanes/containrbot?label=latest%20release&color=blue" alt="Latest Release"></a>
   <a href="https://github.com/josolanes/containrbot/actions/workflows/docker-publish.yml"><img src="https://img.shields.io/github/actions/workflow/status/josolanes/containrbot/docker-publish.yml?label=build" alt="Build Status"></a>
   <a href="https://opensource.org/license/gpl-3.0"><img src="https://img.shields.io/badge/license-%20%20GNU%20GPLv3%20-green" alt="License: GPLv3"></a>
   <a href="https://github.com/josolanes/containrbot/stargazers"><img src="https://img.shields.io/github/stars/josolanes/containrbot?style=flat" alt="GitHub Stars"></a>
   <a href="https://github.com/josolanes/containrbot/graphs/contributors"><img src="https://img.shields.io/github/contributors/josolanes/containrbot" alt="GitHub Contributors"></a>
 </p>
-
-# ContainrBot
 
 An extensible system allowing one of various container orchestrators to be controlled from one of various chat platforms.
 
@@ -18,7 +18,7 @@ The ContainrBot is designed to be easily extended and currently supports the fol
 ContainrBotApi is also designed to be easily extended and currently supports the following container orchestrators:
 * Docker
 * Kubernetes
- 
+
 If you'd like ContainrBot to support additional chat services and orchestrators, please [create an issue](https://github.com/josolanes/ContainrBot/issues).
 
 **All [contributions](https://github.com/josolanes/ContainrBot?tab=contributing-ov-file#introduction) are welcome!** Please feel free to [ask questions](https://github.com/josolanes/ContainrBot/discussions), submit [issues](https://github.com/josolanes/ContainrBot/issues), and [make code changes](https://github.com/josolanes/ContainrBot?tab=contributing-ov-file#introduction) yourself!
@@ -27,7 +27,7 @@ If you'd like ContainrBot to support additional chat services and orchestrators,
 
 The ContainrBotApi is responsible for interacting with the chosen orchestrator (Docker, Kubernetes, etc.).
 
-### Environment Variables
+### ContainrBotApi Environment Variables
 
 #### ORCHESTRATOR
 The orchestrator the ContainrBotApi will interact with. Currently supported options are:
@@ -41,11 +41,11 @@ A JSON array of container objects with these properties:
 * Namespace: The namespace for the deployable (_optional_, orchestrator-dependent)
 
 Examples:
-```
+```yaml
 ORCHESTRATOR: docker
 ```
 
-```
+```yaml
 CONTAINER_LIST: "[{\"FriendlyName\": \"valheim\", \"ContainerName\": \"valheim\"}, {\"FriendlyName\": \"cncnet\", \"ContainerName\": \"cncnet\"}, {\"FriendlyName\": \"satisfactory\", \"ContainerName\": \"satisfactory\"}]"
 ```
 
@@ -54,7 +54,7 @@ CONTAINER_LIST: "[{\"FriendlyName\": \"valheim\", \"ContainerName\": \"valheim\"
 The ContainrBot is responsible for interacting with the chat platform and is what you'll often use directly. The ContainrBot
 calls the ContainrBotApi asking it to interact with containers based on your chatbot commands.
 
-### Environment Variables
+### ContainrBot Environment Variables
 
 #### CHATBOT
 The chat platform the ContainrBot will interact with. Currently supported options are:
