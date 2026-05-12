@@ -6,6 +6,8 @@ using NetCord.Hosting.Gateway;
 using NetCord.Hosting.Services;
 using NetCord.Hosting.Services.ApplicationCommands;
 
+using SlackNet.Extensions.DependencyInjection;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Get required environment variables (will error if not set)
@@ -23,9 +25,14 @@ switch (chatbot.ToLowerInvariant())
 		builder.Services.AddScoped<IChatbot, DiscordChatbot>();
 
 		builder.Services
-			.AddDiscordGateway(options => { options.Token = token; })
+			.AddDiscordGateway(options => options.Token = token)
 			.AddGatewayHandlers(typeof(Program).Assembly)
 			.AddApplicationCommands();
+		break;
+	case "slack":
+		builder.Services.AddSlackNet(options => options
+			.UseAppLevelToken(token)
+			.RegisterSlashCommandHandler<SlackChatbot>($"/{IChatbot.CommandName}"));
 		break;
 	default:
 		throw new InvalidOperationException();
@@ -45,6 +52,10 @@ switch (chatbot.ToLowerInvariant())
 {
 	case "discord":
 		host.AddModules(typeof(Program).Assembly);
+		break;
+	case "slack":
+		var client = host.Services.SlackServices().GetSocketModeClient();
+		await client.Connect();
 		break;
 	default:
 		throw new InvalidOperationException();

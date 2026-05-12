@@ -1,12 +1,8 @@
-using System.Net;
-using System.Text.Json;
+using System.Runtime.CompilerServices;
 
 using ContainrBotApi.Models.Internal;
 
-using Json.Patch;
-
 using k8s;
-using k8s.Autorest;
 using k8s.Models;
 
 using Microsoft.AspNetCore.JsonPatch;
@@ -14,14 +10,12 @@ using Microsoft.AspNetCore.JsonPatch;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
-using JsonSerializer = System.Text.Json.JsonSerializer;
-
 namespace ContainrBotApi.Orchestrators;
 
 public class KubernetesOrchestrator(IKubernetes client) : IOrchestrator
 {
-	public string Name => "Kubernetes";
-
+	public string Name => this.GetType().Name.Replace("Orchestrator", string.Empty);
+	
 	public List<string> RequiredContainerProperties { get; } =
 	[
 		nameof(Container.ContainerName),
