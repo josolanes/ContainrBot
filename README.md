@@ -77,7 +77,7 @@ The chat platform the ContainrBot will interact with. Currently supported option
 * Slack
 
 #### CONTAINRBOTAPI_BASEURL
-The base URL of GameServerApi. <u>**_This should be a local IP address_**</u> as ContainrBotApi is not
+The base URL of ContainrBotApi. <u>**_This should be a local IP address_**</u> as ContainrBotApi is not
 secured or intended to be reached externally. Instead, external access to your containers should be through the ContainrBot
 chatbot
 
