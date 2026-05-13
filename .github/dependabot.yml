@@ -10,7 +10,7 @@ updates:
     rebase-strategy: "auto" # Options: auto, widen, deepen
     open-pull-requests-limit: 5 # Limit the number of open PRs from Dependabot
     groups:
-      all:
+      docker-containrbot:
         patterns:
           - "*"
 
@@ -24,7 +24,7 @@ updates:
     rebase-strategy: "auto" # Options: auto, widen, deepen
     open-pull-requests-limit: 5 # Limit the number of open PRs from Dependabot
     groups:
-      all:
+      docker-containrbotapi:
         patterns:
           - "*"
 
@@ -38,6 +38,6 @@ updates:
     rebase-strategy: "auto" # Options: auto, widen, deepen
     open-pull-requests-limit: 5 # Limit the number of open PRs from Dependabot
     groups:
-      all:
+      nuget:
         patterns:
           - "*"

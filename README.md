@@ -19,6 +19,20 @@ ContainrBotApi is also designed to be easily extended and currently supports the
 * Docker
 * Kubernetes
 
+## Chatbot Commands
+* List
+  * `/containr list`
+  * Lists the configured containers and their status: running, not running, not deployed
+* Start
+  * `/containr start {container}`
+  * Starts the `{container}`
+* Stop
+  * `/containr stop {container}`
+  * Stops the `{container}`
+* Restart
+  * `/containr restart {container}`
+  * Restarts the `{container}`
+
 If you'd like ContainrBot to support additional chat services and orchestrators, please [create an issue](https://github.com/josolanes/ContainrBot/issues).
 
 **All [contributions](https://github.com/josolanes/ContainrBot?tab=contributing-ov-file#introduction) are welcome!** Please feel free to [ask questions](https://github.com/josolanes/ContainrBot/discussions), submit [issues](https://github.com/josolanes/ContainrBot/issues), and [make code changes](https://github.com/josolanes/ContainrBot?tab=contributing-ov-file#introduction) yourself!
