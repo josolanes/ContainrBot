@@ -23,7 +23,7 @@
 	</Target>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.7"/>
+		<PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.8"/>
 		<PackageReference Include="NetCord" Version="1.0.0-alpha.488"/>
 		<PackageReference Include="NetCord.Hosting" Version="1.0.0-alpha.488"/>
 		<PackageReference Include="NetCord.Hosting.AspNetCore" Version="1.0.0-alpha.488"/>
