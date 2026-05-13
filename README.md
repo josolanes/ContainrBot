@@ -20,6 +20,10 @@ ContainrBotApi is also designed to be easily extended and currently supports the
 * Docker
 * Kubernetes
 
+If you'd like ContainrBot to support additional chat services and orchestrators, please [create an issue](https://github.com/josolanes/ContainrBot/issues).
+
+**All [contributions](https://github.com/josolanes/ContainrBot?tab=contributing-ov-file#introduction) are welcome!** Please feel free to [ask questions](https://github.com/josolanes/ContainrBot/discussions), submit [issues](https://github.com/josolanes/ContainrBot/issues), and [make code changes](https://github.com/josolanes/ContainrBot?tab=contributing-ov-file#introduction) yourself!
+
 ## Chatbot Commands
 * List
   * `/containr list`
@@ -33,10 +37,6 @@ ContainrBotApi is also designed to be easily extended and currently supports the
 * Restart
   * `/containr restart {container}`
   * Restarts the `{container}`
-
-If you'd like ContainrBot to support additional chat services and orchestrators, please [create an issue](https://github.com/josolanes/ContainrBot/issues).
-
-**All [contributions](https://github.com/josolanes/ContainrBot?tab=contributing-ov-file#introduction) are welcome!** Please feel free to [ask questions](https://github.com/josolanes/ContainrBot/discussions), submit [issues](https://github.com/josolanes/ContainrBot/issues), and [make code changes](https://github.com/josolanes/ContainrBot?tab=contributing-ov-file#introduction) yourself!
 
 ## The ContainrBotApi
 
@@ -91,12 +91,12 @@ This is the token used to interact with the chosen chat platform
 * NET 10.0
 
 ### Chat Platform Libraries
-* NetCord for setting up the bot interactions with Discord
-* SlackNet for setting up the bot interactions with Slack
+* [NetCord](https://github.com/NetCordDev/NetCord) for setting up the bot interactions with Discord
+* [SlackNet](https://github.com/soxtoby/SlackNet) for setting up the bot interactions with Slack
 
 ### Container Orchestration Libraries
-* Docker.DotNet for Docker management
-* Kubernetes-client for Kubernetes management
+* [Docker.DotNet](https://github.com/dotnet/Docker.DotNet) for Docker management
+* [Kubernetes-client](https://github.com/kubernetes-client/csharp) for Kubernetes management
 
 ## Docker Compose Example
 
