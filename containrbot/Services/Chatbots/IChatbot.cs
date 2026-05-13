@@ -17,8 +17,6 @@ public interface IChatbot
 	const string RestartName = "restart";
 	const string RestartDescription = "Restarts a container";
 
-	const string InProgressMessage = "Working on it...";
-
 	Task<string> List();
 
 	Task<string> Start(string container);

@@ -1,5 +1,3 @@
-using System.Collections.ObjectModel;
-
 using ContainrBot.Library;
 
 using ContainrBotApi;
@@ -15,6 +13,11 @@ var orchestratorVariable = Helpers.GetRequiredEnvironmentVariable(builder, "ORCH
 var containersRaw = Helpers.GetRequiredEnvironmentVariable(builder, "CONTAINER_LIST");
 var containers = JsonSerializer.Deserialize<List<Container>>(containersRaw) ?? [];
 
+var orchestrators = AppDomain.CurrentDomain.GetAssemblies()
+	.SelectMany(s => s.GetTypes())
+	.Where(p => typeof(IOrchestrator).IsAssignableFrom(p) && p is { IsInterface: false, IsAbstract: false })
+	.Select(o => o.Name.Replace("Orchestrator", string.Empty).ToLower());
+
 builder.Services.AddValidation();
 builder.Services.ConfigureHttpJsonOptions(options => { options.SerializerOptions.WriteIndented = true; });
 
@@ -28,18 +31,14 @@ builder.Services.AddOpenApiDocument(config =>
 	config.Version = "v1";
 });
 
-
-// Custom services
-var orchestrators = new ReadOnlyDictionary<string, IOrchestrator>(new Dictionary<string, IOrchestrator>
-{
-	["kubernetes"] = new KubernetesOrchestrator(),
-	["docker"] = new DockerOrchestrator()
-});
-
 builder.Services.AddScoped<IOrchestrator>(sp =>
-	orchestrators!.GetValueOrDefault(orchestratorVariable)
-	?? throw new InvalidOperationException(
-		$"Environment variable `ORCHESTRATOR` is invalid. Valid values are: {string.Join(", ", orchestrators.Keys.ToList())}"));
+	orchestratorVariable?.ToLower() switch
+	{
+		"kubernetes" => new KubernetesOrchestrator(),
+		"docker" => new DockerOrchestrator(),
+		_ => throw new InvalidOperationException(
+			"Environment variable `ORCHESTRATOR` is invalid. Valid values are: `kubernetes`, `docker`")
+	});
 
 // Logging
 builder.Logging.ClearProviders();
@@ -194,7 +193,7 @@ app.MapGet("/debug", async (IOrchestrator orchestrator) =>
 		var output = new DebugResponse
 		{
 			CurrentOrchestrator = orchestratorVariable ?? "***NOT SET***",
-			SupportedOrchestrators = orchestrators.Keys.ToList(),
+			SupportedOrchestrators = [.. orchestrators],
 			IsOrchestratorAccessible = canConnect,
 			OrchestratorConnectionError = connectionError?.Message,
 			Containers = containers,

@@ -5,8 +5,8 @@
       context: .
       dockerfile: containrbot/Dockerfile
     environment:
-      CHATBOT: discord
-      CONTAINRBOTAPI_BASEURL: containerbotapi
+      CHATBOT: slack
+      CONTAINRBOTAPI_BASEURL: "http://containrbotapi:8080/"
     secrets:
       - bot-token
   containrbotapi:
