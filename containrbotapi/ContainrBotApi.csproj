@@ -22,7 +22,7 @@
 		<PackageReference Include="NSwag.AspNetCore" Version="14.7.1"/>
 	</ItemGroup>
 
-	<Target Name="RunEditorConfigChecker" BeforeTargets="CoreCompile">
+	<Target Name="RunEditorConfigChecker" BeforeTargets="CoreCompile" Condition="'$(Configuration)'=='Debug'">
 		<Exec Command="npx -y editorconfig-checker ./" StandardErrorImportance="High">
 			<Output TaskParameter="ConsoleOutput" PropertyName="ECoutput" />
 		</Exec>

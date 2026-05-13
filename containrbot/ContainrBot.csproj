@@ -14,8 +14,16 @@
 		<DebugType>portable</DebugType> <!-- Or 'full' -->
 	</PropertyGroup>
 
-	<Target Name="RunEditorConfigChecker" BeforeTargets="CoreCompile">
+	<Target Name="RunEditorConfigChecker" BeforeTargets="CoreCompile" Condition="'$(Configuration)'=='Debug'">
 		<Exec Command="npx -y editorconfig-checker ./" StandardErrorImportance="High">
+			<Output TaskParameter="ConsoleOutput" PropertyName="ECoutput" />
+		</Exec>
+
+		<Message Text="$(ECoutput)" Importance="High" />
+	</Target>
+
+	<Target Name="RunEditorConfigCheckerWholeRepo" BeforeTargets="CoreCompile" Condition="'$(Configuration)'=='Debug'">
+		<Exec Command="npx -y editorconfig-checker ../" StandardErrorImportance="High">
 			<Output TaskParameter="ConsoleOutput" PropertyName="ECoutput" />
 		</Exec>
 

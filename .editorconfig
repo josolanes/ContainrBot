@@ -395,3 +395,12 @@ indent_style = unset
 
 [*/bin/**]
 indent_style = unset
+
+[.idea**]
+indent_style = unset
+
+[ContainrBot.sln.DotSettings.user]
+indent_style = unset
+
+[node_modules/**]
+indent_style = unset
