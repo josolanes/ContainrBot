@@ -1,3 +1,5 @@
+using System.Runtime.CompilerServices;
+
 using ContainrBotApi.Models.Internal;
 
 using Docker.DotNet;
@@ -9,8 +11,8 @@ public class DockerOrchestrator(IDockerClient client) : IOrchestrator
 {
 	private const string DockerEndpoint = "unix:///var/run/docker.sock";
 
-	public string Name => "Docker";
-
+	public string Name => this.GetType().Name.Replace("Orchestrator", string.Empty);
+	
 	public List<string> RequiredContainerProperties { get; } =
 	[
 		nameof(Container.ContainerName),

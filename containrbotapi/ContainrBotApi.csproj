@@ -23,7 +23,7 @@
 	</ItemGroup>
 
 	<Target Name="RunEditorConfigChecker" BeforeTargets="CoreCompile">
-		<Exec Command="npx -y editorconfig-checker" StandardErrorImportance="High">
+		<Exec Command="npx -y editorconfig-checker ./" StandardErrorImportance="High">
 			<Output TaskParameter="ConsoleOutput" PropertyName="ECoutput" />
 		</Exec>
 

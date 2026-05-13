@@ -8,6 +8,7 @@ using Moq;
 namespace ContainrBot.Tests.Chatbots;
 
 [TestFixture(typeof(DiscordChatbot))]
+[TestFixture(typeof(SlackChatbot))]
 public class CommonChatbotTests<T> where T : IChatbot
 {
 	private const string containerName = "A Container";

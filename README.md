@@ -14,6 +14,7 @@ ContainrBot is made up of the ContainrBot chatbot and the ContainrBotApi.
 
 The ContainrBot is designed to be easily extended and currently supports the following chat platforms:
 * Discord
+* Slack
 
 ContainrBotApi is also designed to be easily extended and currently supports the following container orchestrators:
 * Docker
@@ -73,6 +74,7 @@ calls the ContainrBotApi asking it to interact with containers based on your cha
 #### CHATBOT
 The chat platform the ContainrBot will interact with. Currently supported options are:
 * Discord
+* Slack
 
 #### CONTAINRBOTAPI_BASEURL
 The base URL of GameServerApi. <u>**_This should be a local IP address_**</u> as ContainrBotApi is not
@@ -87,9 +89,14 @@ This is the token used to interact with the chosen chat platform
 ## Technologies In Use
 
 * NET 10.0
-* Kubernetes-client for Kubernetes management
-* Docker.DotNet for Docker management
+
+### Chat Platform Libraries
 * NetCord for setting up the bot interactions with Discord
+* SlackNet for setting up the bot interactions with Slack
+
+### Container Orchestration Libraries
+* Docker.DotNet for Docker management
+* Kubernetes-client for Kubernetes management
 
 ## Docker Compose Example
 
@@ -99,7 +106,7 @@ services:
     image: ghcr.io/josolanes/containrbot/containrbot:latest
     environment:
       CHATBOT: discord
-      CONTAINRBOTAPI_BASEURL: containerbotapi
+      CONTAINRBOTAPI_BASEURL: "http://containrbotapi:8080/"
     secrets:
       - bot-token
           

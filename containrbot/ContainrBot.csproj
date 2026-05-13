@@ -15,7 +15,7 @@
 	</PropertyGroup>
 
 	<Target Name="RunEditorConfigChecker" BeforeTargets="CoreCompile">
-		<Exec Command="npx -y editorconfig-checker" StandardErrorImportance="High">
+		<Exec Command="npx -y editorconfig-checker ./" StandardErrorImportance="High">
 			<Output TaskParameter="ConsoleOutput" PropertyName="ECoutput" />
 		</Exec>
 
@@ -29,6 +29,8 @@
 		<PackageReference Include="NetCord.Hosting.AspNetCore" Version="1.0.0-alpha.488"/>
 		<PackageReference Include="NetCord.Hosting.Services" Version="1.0.0-alpha.488"/>
 		<PackageReference Include="NetCord.Services" Version="1.0.0-alpha.488"/>
+		<PackageReference Include="SlackNet" Version="0.17.10" />
+		<PackageReference Include="SlackNet.Extensions.DependencyInjection" Version="0.17.10" />
 	</ItemGroup>
 
 	<ItemGroup>
