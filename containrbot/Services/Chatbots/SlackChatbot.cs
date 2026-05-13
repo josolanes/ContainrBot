@@ -10,7 +10,7 @@ public class SlackChatbot(
 {
 	public async Task<SlashCommandResponse> Handle(SlashCommand command)
 	{
-		var commandParts = command.Text.Split(' ',  StringSplitOptions.RemoveEmptyEntries);
+		var commandParts = command.Text.Split(' ', StringSplitOptions.RemoveEmptyEntries);
 		var commandName = commandParts[0];
 		var containerName = commandParts.Length >= 2 ? commandParts[1] : string.Empty;
 
