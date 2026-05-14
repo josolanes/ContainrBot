@@ -30,6 +30,13 @@
 		<Message Text="$(ECoutput)" Importance="High" />
 	</Target>
 
+	<Target Name="CopyCommitHookLocal" AfterTargets="AfterBuild">
+		<ItemGroup>
+			<_CustomFiles Include="../.github/commit-msg" />
+		</ItemGroup>
+		<Copy SourceFiles="@(_CustomFiles)" DestinationFolder="./../.git/hooks" />
+	</Target>
+
 	<ItemGroup>
 		<PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.8"/>
 		<PackageReference Include="NetCord" Version="1.0.0-alpha.488"/>

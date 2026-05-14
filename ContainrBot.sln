@@ -20,6 +20,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Solution Items", "_Solutio
 		docker-compose.yml = docker-compose.yml
 		package.json = package.json
 		.github\workflows\editorconfig-checker.yml = .github\workflows\editorconfig-checker.yml
+		.github\commit-msg = .github\commit-msg
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ContainrBot.Library", "containrbot.library\ContainrBot.Library.csproj", "{B3F34B2B-9344-4A2B-A3E9-43ABC9BA4D71}"
