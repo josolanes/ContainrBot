@@ -18,6 +18,18 @@ feature requests or writing code which can be incorporated into ContainrBot itse
 * Before creating a pull request:
 	* Ensure code builds successfully
 	* Ensure unit tests pass
+    * Ensure commit messages follow [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/#examples)
+as ContainrBot versioning changes by type of conventional commit
+        * Examples:
+            * `fix(discord): Resolved some issue`
+            * `fix: Resolved issue with discord`
+            * `fix!: This is a breaking change, indicated by the exclamation mark after type`
+        * Types (feat, fix, chore, perf, test) are up to the developer to decide. Here is some guidance:
+            * feat: Implements a new feature
+            * fix: Fixes a bug or issue
+            * chore: Some code cleanup or fixes that aren't likely to change functionality
+            * perf: Performance improvements
+            * test: Implment or modify unit tests
 * Create issues for changes and enhancements that you wish to make. Discuss things transparently and get
 	community feedback.
 * Keep feature versions as small as possible, preferably one new feature per version.
