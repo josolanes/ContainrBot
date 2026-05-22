@@ -8,7 +8,7 @@
   <a href="https://github.com/josolanes/containrbot/graphs/contributors"><img src="https://img.shields.io/github/contributors/josolanes/containrbot" alt="GitHub Contributors"></a>
 </p>
 
-An extensible system allowing one of various container orchestrators to be controlled from one of various chat platforms.
+An extensible system that allows one of various container orchestrators to be controlled from one of various chat platforms.
 
 ContainrBot is made up of the ContainrBot chatbot and the ContainrBotApi.
 
@@ -19,6 +19,11 @@ The ContainrBot is designed to be easily extended and currently supports the fol
 ContainrBotApi is also designed to be easily extended and currently supports the following container orchestrators:
 * Docker
 * Kubernetes
+
+Common use cases:
+* Enabling a group of friends to control a game server
+* Restarting a finicky container
+* Starting a high-load container only when needed
 
 If you'd like ContainrBot to support additional chat services and orchestrators, please [create an issue](https://github.com/josolanes/ContainrBot/issues).
 
