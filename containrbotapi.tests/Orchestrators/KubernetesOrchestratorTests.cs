@@ -233,7 +233,7 @@ public class KubernetesOrchestratorTests
 	}
 
 	[Test]
-	public void Exists_ReturnsTrue()
+	public async System.Threading.Tasks.Task Exists_ReturnsTrue()
 	{
 		var kubernetesClient = new Mock<IKubernetes>();
 		kubernetesClient.Setup(s =>
@@ -249,11 +249,11 @@ public class KubernetesOrchestratorTests
 		};
 
 		Assert.DoesNotThrowAsync(async () => await orchestrator.Exists(container));
-		Assert.ThatAsync(async () => await orchestrator.Exists(container), Is.True);
+		await Assert.ThatAsync(async () => await orchestrator.Exists(container), Is.True);
 	}
 
 	[Test]
-	public void Exists_ReturnsFalse()
+	public async System.Threading.Tasks.Task Exists_ReturnsFalse()
 	{
 		var kubernetesClient = new Mock<IKubernetes>();
 		kubernetesClient.Setup(s =>
@@ -270,11 +270,11 @@ public class KubernetesOrchestratorTests
 		};
 
 		Assert.DoesNotThrowAsync(async () => await orchestrator.Exists(container));
-		Assert.ThatAsync(async () => await orchestrator.Exists(container), Is.False);
+		await Assert.ThatAsync(async () => await orchestrator.Exists(container), Is.False);
 	}
 
 	[Test]
-	public void CanConnect_ReturnsTrue()
+	public async System.Threading.Tasks.Task CanConnect_ReturnsTrue()
 	{
 		var kubernetesClient = new Mock<IKubernetes>();
 		kubernetesClient.Setup(s => s.CoreV1.ListNodeWithHttpMessagesAsync())
@@ -289,11 +289,11 @@ public class KubernetesOrchestratorTests
 		var orchestrator = new KubernetesOrchestrator(kubernetesClient.Object);
 
 		Assert.DoesNotThrowAsync(async () => await orchestrator.CanConnect());
-		Assert.ThatAsync(async () => await orchestrator.CanConnect(), Is.True);
+		await Assert.ThatAsync(async () => await orchestrator.CanConnect(), Is.True);
 	}
 
 	[Test]
-	public void CanConnect_Exception_ReturnsFalse()
+	public async System.Threading.Tasks.Task CanConnect_Exception_ReturnsFalse()
 	{
 		var kubernetesClient = new Mock<IKubernetes>();
 		kubernetesClient.Setup(s => s.CoreV1.ListNodeWithHttpMessagesAsync())
@@ -302,11 +302,11 @@ public class KubernetesOrchestratorTests
 		var orchestrator = new KubernetesOrchestrator(kubernetesClient.Object);
 
 		Assert.DoesNotThrowAsync(async () => await orchestrator.CanConnect());
-		Assert.ThatAsync(async () => await orchestrator.CanConnect(), Is.False);
+		await Assert.ThatAsync(async () => await orchestrator.CanConnect(), Is.False);
 	}
 
 	[Test]
-	public void CanConnect_ReturnsFalse()
+	public async System.Threading.Tasks.Task CanConnect_ReturnsFalse()
 	{
 		var kubernetesClient = new Mock<IKubernetes>();
 		kubernetesClient.Setup(s => s.CoreV1.ListNodeWithHttpMessagesAsync())
@@ -321,7 +321,7 @@ public class KubernetesOrchestratorTests
 		var orchestrator = new KubernetesOrchestrator(kubernetesClient.Object);
 
 		Assert.DoesNotThrowAsync(async () => await orchestrator.CanConnect());
-		Assert.ThatAsync(async () => await orchestrator.CanConnect(), Is.False);
+		await Assert.ThatAsync(async () => await orchestrator.CanConnect(), Is.False);
 	}
 
 	[Test]
