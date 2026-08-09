@@ -38,6 +38,7 @@
 	</Target>
 
 	<ItemGroup>
+		<PackageReference Include="Haven.DotNet" Version="*" />
 		<PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.8"/>
 		<PackageReference Include="NetCord" Version="1.0.0-beta.2"/>
 		<PackageReference Include="NetCord.Hosting" Version="1.0.0-beta.2"/>

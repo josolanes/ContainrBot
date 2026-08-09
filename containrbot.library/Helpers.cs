@@ -13,4 +13,13 @@ public static class Helpers
 			? variableValue
 			: throw new InvalidOperationException($"Environment variable not set: {environmentVariable}");
 	}
+	
+	public static string? GetOptionalEnvironmentVariable(IHostApplicationBuilder builder, string environmentVariable)
+	{
+		var variableValue = builder.Configuration.GetValue<string>(environmentVariable);
+
+		return !string.IsNullOrEmpty(variableValue)
+			? variableValue
+			: null;
+	}
 }

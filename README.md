@@ -13,12 +13,13 @@ An extensible system that allows one of various container orchestrators to be co
 ContainrBot is made up of the ContainrBot chatbot and the ContainrBotApi.
 
 The ContainrBot is designed to be easily extended and currently supports the following chat platforms:
-* Discord
-* Slack
+* [Discord](https://discord.com/)
+* [Slack](https://slack.com/)
+* [Haven](https://ancsemi.github.io/Haven/)
 
 ContainrBotApi is also designed to be easily extended and currently supports the following container orchestrators:
-* Docker
-* Kubernetes
+* [Docker](https://www.docker.com/)
+* [Kubernetes](https://kubernetes.io/)
 
 Common use cases:
 * Enabling a group of friends to control a game server
@@ -98,6 +99,7 @@ This is the token used to interact with the chosen chat platform
 ### Chat Platform Libraries
 * [NetCord](https://github.com/NetCordDev/NetCord) for setting up the bot interactions with Discord
 * [SlackNet](https://github.com/soxtoby/SlackNet) for setting up the bot interactions with Slack
+* [Haven.DotNet](https://github.com/josolanes/Haven.DotNet) for setting up the bot interactions with Haven
 
 ### Container Orchestration Libraries
 * [Docker.DotNet](https://github.com/dotnet/Docker.DotNet) for Docker management

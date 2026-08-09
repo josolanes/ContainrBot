@@ -2,6 +2,8 @@ using ContainrBot.Library;
 using ContainrBot.Services;
 using ContainrBot.Services.Chatbots;
 
+using Haven.DotNet.Extensions;
+
 using NetCord.Hosting.Gateway;
 using NetCord.Hosting.Services;
 using NetCord.Hosting.Services.ApplicationCommands;
@@ -13,6 +15,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Get required environment variables (will error if not set)
 var chatbot = Helpers.GetRequiredEnvironmentVariable(builder, "CHATBOT");
 var containrbotapiUrl = Helpers.GetRequiredEnvironmentVariable(builder, "CONTAINRBOTAPI_BASEURL");
+var chatServiceUrl = Helpers.GetOptionalEnvironmentVariable(builder, "CHAT_SERVICE_URL");
 var token = GetBotToken();
 
 builder.Services.AddHttpClient<IContainrBotApiService, ContainrBotApiService>("containrbotapi",
@@ -33,6 +36,11 @@ switch (chatbot.ToLowerInvariant())
 		builder.Services.AddSlackNet(options => options
 			.UseAppLevelToken(token)
 			.RegisterSlashCommandHandler<SlackChatbot>($"/{IChatbot.CommandName}"));
+		break;
+	case "haven":
+		builder.Services.AddHavenDotNet<HavenChatbot>(
+			chatServiceUrl ?? throw new InvalidOperationException("CHAT_SERVICE_URL environment variable must be set when chat service is 'Haven'"),
+			token);
 		break;
 	default:
 		throw new InvalidOperationException();
@@ -56,6 +64,10 @@ switch (chatbot.ToLowerInvariant())
 	case "slack":
 		var client = host.Services.SlackServices().GetSocketModeClient();
 		await client.Connect();
+		break;
+	case "haven":
+		host.UseHavenDotNetCallback();
+		await host.RegisterHavenSlashCommand<HavenChatbot>("containr", "Control containers");
 		break;
 	default:
 		throw new InvalidOperationException();

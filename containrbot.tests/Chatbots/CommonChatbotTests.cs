@@ -9,6 +9,7 @@ namespace ContainrBot.Tests.Chatbots;
 
 [TestFixture(typeof(DiscordChatbot))]
 [TestFixture(typeof(SlackChatbot))]
+[TestFixture(typeof(HavenChatbot))]
 public class CommonChatbotTests<T> where T : IChatbot
 {
 	private const string containerName = "A Container";
