@@ -8,6 +8,7 @@
 		<LangVersion>default</LangVersion>
 		<RootNamespace>ContainrBot</RootNamespace>
 		<EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+		<CopyDebugSymbolFilesFromPackages>true</CopyDebugSymbolFilesFromPackages>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -38,7 +39,7 @@
 	</Target>
 
 	<ItemGroup>
-		<PackageReference Include="Haven.DotNet" Version="0.0.14" />
+		<PackageReference Include="Haven.DotNet" Version="0.1.0" />
 		<PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.10"/>
 		<PackageReference Include="NetCord" Version="1.0.0-beta.12"/>
 		<PackageReference Include="NetCord.Hosting" Version="1.0.0-beta.12"/>

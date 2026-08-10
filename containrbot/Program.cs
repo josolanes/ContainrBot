@@ -15,8 +15,10 @@ var builder = WebApplication.CreateBuilder(args);
 // Get required environment variables (will error if not set)
 var chatbot = Helpers.GetRequiredEnvironmentVariable(builder, "CHATBOT");
 var containrbotapiUrl = Helpers.GetRequiredEnvironmentVariable(builder, "CONTAINRBOTAPI_BASEURL");
-var chatServiceUrl = Helpers.GetOptionalEnvironmentVariable(builder, "CHAT_SERVICE_URL");
 var token = GetBotToken();
+
+var chatServiceUrl = Helpers.GetOptionalEnvironmentVariable(builder, "CHAT_SERVICE_URL");
+var webhookSecret = Helpers.GetOptionalEnvironmentVariable(builder, "WEBHOOK_SECRET");
 
 builder.Services.AddHttpClient<IContainrBotApiService, ContainrBotApiService>("containrbotapi",
 	client => client.BaseAddress = new Uri(containrbotapiUrl));
@@ -40,7 +42,8 @@ switch (chatbot.ToLowerInvariant())
 	case "haven":
 		builder.Services.AddHavenDotNet<HavenChatbot>(
 			chatServiceUrl ?? throw new InvalidOperationException("CHAT_SERVICE_URL environment variable must be set when chat service is 'Haven'"),
-			token);
+			token,
+			webhookSecret);
 		break;
 	default:
 		throw new InvalidOperationException();
