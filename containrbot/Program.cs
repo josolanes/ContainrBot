@@ -17,8 +17,9 @@ var chatbot = Helpers.GetRequiredEnvironmentVariable(builder, "CHATBOT");
 var containrbotapiUrl = Helpers.GetRequiredEnvironmentVariable(builder, "CONTAINRBOTAPI_BASEURL");
 var token = GetBotToken();
 
+// Get optional environment variables (nullable)
 var chatServiceUrl = Helpers.GetOptionalEnvironmentVariable(builder, "CHAT_SERVICE_URL");
-var webhookSecret = Helpers.GetOptionalEnvironmentVariable(builder, "WEBHOOK_SECRET");
+var webhookSecret = GetWebhookSecret();
 
 builder.Services.AddHttpClient<IContainrBotApiService, ContainrBotApiService>("containrbotapi",
 	client => client.BaseAddress = new Uri(containrbotapiUrl));
@@ -100,4 +101,22 @@ static string GetBotToken()
 	}
 
 	return botToken;
+}
+
+static string? GetWebhookSecret()
+{
+	const string botTokenSecretPathDocker = "/run/secrets/bot-webhook-secret";
+	const string botTokenSecretPathKubernetes = "/run/secrets/bot-webhook-secret/bot-webhook-secret";
+
+	string? botWebhookSecret = null;
+	if (File.Exists(botTokenSecretPathDocker))
+	{
+		botWebhookSecret = File.ReadAllText(botTokenSecretPathDocker).Trim();
+	}
+	else if (File.Exists(botTokenSecretPathKubernetes))
+	{
+		botWebhookSecret = File.ReadAllText(botTokenSecretPathKubernetes).Trim();
+	}
+
+	return botWebhookSecret;
 }
