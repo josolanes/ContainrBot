@@ -41,11 +41,11 @@
 	<ItemGroup>
 		<PackageReference Include="Haven.DotNet" Version="0.2.8" />
 		<PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.12"/>
-		<PackageReference Include="NetCord" Version="1.0.0-beta.20"/>
-		<PackageReference Include="NetCord.Hosting" Version="1.0.0-beta.20"/>
-		<PackageReference Include="NetCord.Hosting.AspNetCore" Version="1.0.0-beta.20"/>
-		<PackageReference Include="NetCord.Hosting.Services" Version="1.0.0-beta.20"/>
-		<PackageReference Include="NetCord.Services" Version="1.0.0-beta.20"/>
+		<PackageReference Include="NetCord" Version="1.0.0-beta.21"/>
+		<PackageReference Include="NetCord.Hosting" Version="1.0.0-beta.21"/>
+		<PackageReference Include="NetCord.Hosting.AspNetCore" Version="1.0.0-beta.21"/>
+		<PackageReference Include="NetCord.Hosting.Services" Version="1.0.0-beta.21"/>
+		<PackageReference Include="NetCord.Services" Version="1.0.0-beta.21"/>
 		<PackageReference Include="SlackNet" Version="0.18.0" />
 		<PackageReference Include="SlackNet.Extensions.DependencyInjection" Version="0.18.0" />
 	</ItemGroup>
