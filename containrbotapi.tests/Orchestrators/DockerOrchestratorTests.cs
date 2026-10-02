@@ -116,7 +116,7 @@ public class DockerOrchestratorTests
 	}
 
 	[Test]
-	public void Start_Success()
+	public async Task Start_Success()
 	{
 		var dockerContainerOperations = new Mock<IContainerOperations>();
 		dockerContainerOperations.Setup(s => s.StartContainerAsync(It.IsAny<string>(), It.IsAny<ContainerStartParameters>()))
@@ -134,11 +134,11 @@ public class DockerOrchestratorTests
 			ContainerName = "SomeContainer"
 		};
 
-		Assert.DoesNotThrowAsync(async () => await orchestrator.Start(container));
+		await Assert.DoesNotThrowAsync(async () => await orchestrator.Start(container));
 	}
 
 	[Test]
-	public void Start_Throws()
+	public async Task Start_Throws()
 	{
 		var dockerContainerOperations = new Mock<IContainerOperations>();
 		dockerContainerOperations.Setup(s => s.StartContainerAsync(It.IsAny<string>(), It.IsAny<ContainerStartParameters>()))
@@ -156,11 +156,11 @@ public class DockerOrchestratorTests
 			ContainerName = "SomeContainer"
 		};
 
-		Assert.CatchAsync(async () => await orchestrator.Start(container));
+		await Assert.CatchAsync(async () => await orchestrator.Start(container));
 	}
 
 	[Test]
-	public void Stop_Success()
+	public async Task Stop_Success()
 	{
 		var dockerContainerOperations = new Mock<IContainerOperations>();
 		dockerContainerOperations.Setup(s => s.StopContainerAsync(It.IsAny<string>(), It.IsAny<ContainerStopParameters>()))
@@ -178,11 +178,11 @@ public class DockerOrchestratorTests
 			ContainerName = "SomeContainer"
 		};
 
-		Assert.DoesNotThrowAsync(async () => await orchestrator.Stop(container));
+		await Assert.DoesNotThrowAsync(async () => await orchestrator.Stop(container));
 	}
 
 	[Test]
-	public void Stop_Throws()
+	public async Task Stop_Throws()
 	{
 		var dockerContainerOperations = new Mock<IContainerOperations>();
 		dockerContainerOperations.Setup(s => s.StopContainerAsync(It.IsAny<string>(), It.IsAny<ContainerStopParameters>()))
@@ -200,11 +200,11 @@ public class DockerOrchestratorTests
 			ContainerName = "SomeContainer"
 		};
 
-		Assert.CatchAsync(async () => await orchestrator.Stop(container));
+		await Assert.CatchAsync(async () => await orchestrator.Stop(container));
 	}
 
 	[Test]
-	public void Restart_Success()
+	public async Task Restart_Success()
 	{
 		var dockerContainerOperations = new Mock<IContainerOperations>();
 		dockerContainerOperations.Setup(s =>
@@ -222,11 +222,11 @@ public class DockerOrchestratorTests
 			ContainerName = "SomeContainer"
 		};
 
-		Assert.DoesNotThrowAsync(async () => await orchestrator.Restart(container));
+		await Assert.DoesNotThrowAsync(async () => await orchestrator.Restart(container));
 	}
 
 	[Test]
-	public void Restart_Throws()
+	public async Task Restart_Throws()
 	{
 		var dockerContainerOperations = new Mock<IContainerOperations>();
 		dockerContainerOperations.Setup(s => s.RestartContainerAsync(It.IsAny<string>(), It.IsAny<ContainerRestartParameters>()))
@@ -244,11 +244,11 @@ public class DockerOrchestratorTests
 			ContainerName = "SomeContainer"
 		};
 
-		Assert.CatchAsync(async () => await orchestrator.Restart(container));
+		await Assert.CatchAsync(async () => await orchestrator.Restart(container));
 	}
 
 	[Test]
-	public async System.Threading.Tasks.Task Exists_ReturnsTrue()
+	public async Task Exists_ReturnsTrue()
 	{
 		var dockerContainerOperations = new Mock<IContainerOperations>();
 		dockerContainerOperations.Setup(s => s.InspectContainerAsync(It.IsAny<string>()))
@@ -266,12 +266,12 @@ public class DockerOrchestratorTests
 			ContainerName = "SomeContainer"
 		};
 
-		Assert.DoesNotThrowAsync(async () => await orchestrator.Exists(container));
+		await Assert.DoesNotThrowAsync(async () => await orchestrator.Exists(container));
 		await Assert.ThatAsync(async () => await orchestrator.Exists(container), Is.True);
 	}
 
 	[Test]
-	public async System.Threading.Tasks.Task Exists_ReturnsFalse()
+	public async Task Exists_ReturnsFalse()
 	{
 		var dockerContainerOperations = new Mock<IContainerOperations>();
 		dockerContainerOperations.Setup(s => s.InspectContainerAsync(It.IsAny<string>()))
@@ -289,12 +289,12 @@ public class DockerOrchestratorTests
 			ContainerName = "SomeContainer"
 		};
 
-		Assert.DoesNotThrowAsync(async () => await orchestrator.Exists(container));
+		await Assert.DoesNotThrowAsync(async () => await orchestrator.Exists(container));
 		await Assert.ThatAsync(async () => await orchestrator.Exists(container), Is.False);
 	}
 
 	[Test]
-	public async System.Threading.Tasks.Task CanConnect_ReturnsTrue()
+	public async Task CanConnect_ReturnsTrue()
 	{
 		var dockerSystemOperations = new Mock<ISystemOperations>();
 		dockerSystemOperations.Setup(s => s.GetVersionAsync())
@@ -315,12 +315,12 @@ public class DockerOrchestratorTests
 			ContainerName = "SomeContainer"
 		};
 
-		Assert.DoesNotThrowAsync(async () => await orchestrator.CanConnect());
+		await Assert.DoesNotThrowAsync(async () => await orchestrator.CanConnect());
 		await Assert.ThatAsync(async () => await orchestrator.CanConnect(), Is.True);
 	}
 
 	[Test]
-	public async System.Threading.Tasks.Task CanConnect_Exception_ReturnsFalse()
+	public async Task CanConnect_Exception_ReturnsFalse()
 	{
 		var dockerSystemOperations = new Mock<ISystemOperations>();
 		dockerSystemOperations.Setup(s => s.GetVersionAsync())
@@ -338,12 +338,12 @@ public class DockerOrchestratorTests
 			ContainerName = "SomeContainer"
 		};
 
-		Assert.DoesNotThrowAsync(async () => await orchestrator.CanConnect());
+		await Assert.DoesNotThrowAsync(async () => await orchestrator.CanConnect());
 		await Assert.ThatAsync(async () => await orchestrator.CanConnect(), Is.False);
 	}
 
 	[Test]
-	public async System.Threading.Tasks.Task CanConnect_ReturnsFalse()
+	public async Task CanConnect_ReturnsFalse()
 	{
 		var dockerSystemOperations = new Mock<ISystemOperations>();
 		dockerSystemOperations.Setup(s => s.GetVersionAsync())
@@ -364,7 +364,7 @@ public class DockerOrchestratorTests
 			ContainerName = "SomeContainer"
 		};
 
-		Assert.DoesNotThrowAsync(async () => await orchestrator.CanConnect());
+		await Assert.DoesNotThrowAsync(async () => await orchestrator.CanConnect());
 		await Assert.ThatAsync(async () => await orchestrator.CanConnect(), Is.False);
 	}
 
