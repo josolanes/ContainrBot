@@ -1,45 +1,39 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-		<PropertyGroup>
-				<TargetFramework>net10.0</TargetFramework>
-				<LangVersion>latest</LangVersion>
-				<ImplicitUsings>enable</ImplicitUsings>
-				<Nullable>enable</Nullable>
-				<IsPackable>false</IsPackable>
-				<AssemblyName>ContainrBotApi.Tests</AssemblyName>
-				<RootNamespace>ContainrBotApi.Tests</RootNamespace>
-		</PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net11.0</TargetFramework>
+		<LangVersion>latest</LangVersion>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<IsPackable>false</IsPackable>
+		<AssemblyName>ContainrBotApi.Tests</AssemblyName>
+		<RootNamespace>ContainrBotApi.Tests</RootNamespace>
+	</PropertyGroup>
 
-		<ItemGroup>
-				<PackageReference Include="Castle.Core" Version="5.2.1" />
-				<PackageReference Include="coverlet.collector" Version="10.1.0"/>
-				<PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.11.0"/>
-				<PackageReference Include="Moq" Version="4.21.0" />
-				<PackageReference Include="NUnit" Version="5.0.0"/>
-				<PackageReference Include="NUnit.Analyzers" Version="4.15.0"/>
-				<PackageReference Include="NUnit3TestAdapter" Version="6.3.1"/>
-		</ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Castle.Core" Version="5.2.1" />
+		<PackageReference Include="coverlet.collector" Version="10.1.0" />
+		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.11.0" />
+		<PackageReference Include="Moq" Version="4.21.0" />
+		<PackageReference Include="NUnit" Version="5.0.0" />
+		<PackageReference Include="NUnit.Analyzers" Version="4.15.0" />
+		<PackageReference Include="NUnit3TestAdapter" Version="6.3.1" />
+	</ItemGroup>
 
-		<ItemGroup>
-				<Using Include="NUnit.Framework"/>
-		</ItemGroup>
+	<ItemGroup>
+		<Using Include="NUnit.Framework" />
+	</ItemGroup>
 
-		<ItemGroup>
-				<ProjectReference Include="..\containrbotapi\ContainrBotApi.csproj" />
-		</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\containrbotapi\ContainrBotApi.csproj" />
+	</ItemGroup>
 
-		<Target Name="RunEditorConfigChecker" BeforeTargets="CoreCompile" Condition="'$(Configuration)'=='Debug'">
-			<Exec Command="npx -y editorconfig-checker ./" StandardErrorImportance="High">
-				<Output TaskParameter="ConsoleOutput" PropertyName="ECoutput" />
-			</Exec>
-	
-			<Message Text="$(ECoutput)" Importance="High" />
-		</Target>
+	<Target Name="RunEditorConfigChecker" BeforeTargets="CoreCompile" Condition="'$(Configuration)'=='Debug'">
+		<Exec Command="npx -y editorconfig-checker ./" StandardErrorImportance="High">
+			<Output TaskParameter="ConsoleOutput" PropertyName="ECoutput" />
+		</Exec>
 
-		<ItemGroup>
-				<Reference Include="Moq">
-						<HintPath>..\..\..\.nuget\packages\moq\4.20.72\lib\net6.0\Moq.dll</HintPath>
-				</Reference>
-		</ItemGroup>
+		<Message Text="$(ECoutput)" Importance="High" />
+	</Target>
 
 </Project>
