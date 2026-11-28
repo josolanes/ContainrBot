@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
 	<PropertyGroup>
-		<TargetFramework>net10.0</TargetFramework>
+		<TargetFramework>net11.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
@@ -15,11 +15,11 @@
 
 	<ItemGroup>
 		<PackageReference Include="Docker.DotNet" Version="3.125.15" />
-		<PackageReference Include="JsonPatch.Net" Version="5.0.3"/>
-		<PackageReference Include="KubernetesClient" Version="21.0.8"/>
-		<PackageReference Include="Microsoft.AspNetCore.JsonPatch" Version="10.0.14"/>
-		<PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.14"/>
-		<PackageReference Include="NSwag.AspNetCore" Version="14.7.1"/>
+		<PackageReference Include="JsonPatch.Net" Version="5.0.3" />
+		<PackageReference Include="KubernetesClient" Version="21.0.8" />
+		<PackageReference Include="Microsoft.AspNetCore.JsonPatch" Version="11.0.0" />
+		<PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="11.0.0" />
+		<PackageReference Include="NSwag.AspNetCore" Version="14.7.1" />
 	</ItemGroup>
 
 	<Target Name="RunEditorConfigChecker" BeforeTargets="CoreCompile" Condition="'$(Configuration)'=='Debug'">
@@ -31,11 +31,11 @@
 	</Target>
 
 	<ItemGroup>
-		<Folder Include="Properties/"/>
+		<Folder Include="Properties/" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\containrbot.library\ContainrBot.Library.csproj"/>
+		<ProjectReference Include="..\containrbot.library\ContainrBot.Library.csproj" />
 	</ItemGroup>
 
 </Project>
